@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-7">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>My Google Maps</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 100%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+      <div id="map"></div>
+
+    <script>
+      var map;
+      function initMap() {
+        var options ={
+          zoom:13,
+          center:{lat:40.7359,lng:-73.9911},
+
+        }
+        
+        var map = new google.maps.Map(document.getElementById('map'),options,);
+        /*
+        // Listen for click on map
+        google.maps.event.addListener(map, 'click',function(event){
+          // Add marker
+          addMarker({coords:event.latLng});
+
+        });
+        */
+/*
+        var marker = new google.maps.Marker({
+          position:{lat:40.7359,lng:-73.9911},
+          map:map,
+          icon:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'
+
+        });
+
+        var infoWindow = new google.maps.InfoWindow({
+          content:'<h1>Union Square NY<h1>'
+        });
+
+        marker.addListener('click',function(){
+          infoWindow.open(map, marker);
+        });
+*/
+
+        //Array of Markers
+
+        var markers = [
+          {
+            coords:{lat:37.656952,lng:127.042873},
+            iconimage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png', 
+            content:'<h3>Korean Home</h3>'
+          },
+          {
+            coords:{lat:40.721949,lng:-74.034435},
+            iconimage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png', 
+            content:'<h3>Home</h3><p>444 Washington blvd, Apt. 1501, Jersey City, NJ</p>'
+          },
+          {
+            coords:{lat:40.7359,lng:-73.9911},
+            iconimage:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png', 
+            content:'<h3>Union Square</h3>'
+          },
+          {
+            coords:{lat:40.750693,lng:-74.00593},
+            content:'<h3>Printed Matter</h3>'
+          },
+          {
+            coords:{lat:40.737360,lng:-73.997066},
+            content:'<h3>Path to NJ</h3>'
+          },
+          {
+            coords:{lat:40.735197,lng:-73.994606},
+            content:'<h3>University Design Studio</h3>'
+          },
+          //{
+          //  coords:{lat:40.748421,lng:-73.987176},
+          //  content:'<h3>Hedi</h3><p>32 C</p>'
+          //},
+          {
+            coords:{lat:40.737007,lng:-73.995747},
+            content:'<h3>2:25pm, Jan 24, 2019</h3><p>A lady drinking her juice using her aluminum straw in a recyclable plastic cup. How irony is it?</p>'
+          },
+          {
+            coords:{lat:40.738296,lng:-73.998791},
+            content:'<h3>2:28pm, Jan 24, 2019 </h3><p>A guy walking with his headphone on wearing shorts and a very thin hoodie with his nose very red. </br>Must be really cold in the winter.</p>'
+          },
+          {
+            coords:{lat:40.739125,lng:-74.000752},
+            content:'<h3>2:31pm, Jan 24, 2019 </h3><p>A guy with a glasses and khaki pants walking out from a building with an old rusted typewriter. </br>He moved it in to his U-haul truck.</p>'
+          },
+          {
+            coords:{lat:40.739492,lng:-74.001735},
+            content:'<h3>2:33pm, Jan 24, 2019 </h3><p>Construction ahead stopped me for a minute. </br>I heard 3 mexican workers yelling at each other while I was passing by.</p>'
+          },
+          {
+            coords:{lat:40.739814,lng:-74.002535},
+            content:'<h3>2:34pm, Jan 24, 2019 </h3><p>A police officer controlling the traffic with his neon yellow vest and globes on.</p>'
+          },
+          {
+            coords:{lat:40.740091,lng:-74.003051},
+            content:'<h3>2:35pm, Jan 24, 2019 </h3><p>A homeless lady organizing her stuffs at the bus stop. </br>she was occupying the enire station with her stuffs.</p>'
+          },
+          {
+            coords:{lat:40.740620,lng:-74.004350},
+            content:'<h3>2:39pm, Jan 24, 2019 </h3><p>A guy with gelled hair walking cheerfully with his blue columbia shopping bag. </br>He happily walked in to the store.</p>'
+          },
+          {
+            coords:{lat:40.740620,lng:-74.004350},
+            content:'<h3>2:42pm, Jan 24, 2019 </h3><p>A food delivery guy ringing a doorbell trying to get inside the building. </br>He had a black backpack that has the word ‘RELAY’ printed on.</p>'
+          },
+          {
+            coords:{lat:40.742359,lng:-74.007966},
+            content:'<h3>2:50pm, Jan 24, 2019 </h3><p>A very cool looking guy with a lot of pins his leather jacket </br>and a black top hat walking really slowly.</p>'
+          },
+          {
+            coords:{lat:40.743061,lng:-74.007461},
+            content:'<h3>2:52pm, Jan 24, 2019 </h3><p>A lady taking a picture of the bottom structure of the High Line below from the streets.</p>'
+          },
+          {
+            coords:{lat:40.743455,lng:-74.007193},
+            content:'<h3>2:53pm, Jan 24, 2019 </h3><p>A guy with a red helmet riding inline skate very proficiently.</p>'
+          },
+          {
+            coords:{lat:40.744893,lng:-74.006134},
+            content:'<h3>2:55pm, Jan 24, 2019 </h3><p>Two construction workers waiting for their foods infront of </br>the Halal food cart with their neon yellow vests.</p>'
+          },
+          {
+            coords:{lat:40.745285,lng:-74.005842},
+            content:'<h3>2:56pm, Jan 24, 2019 </h3><p>An old couple walking infront of me holding hands together. </br>The lady let go of her husband or boyfriend to tell directions.</p>'
+          },
+          {
+            coords:{lat:40.746586,lng:-74.004920},
+            content:'<h3>3:00pm, Jan 24, 2019 </h3><p>A big brown dog leaving his mark under a tree. </br> The owner kindly waits for his dog to finish his thing.</p>'
+          },
+          {
+            coords:{lat:40.749382,lng:-74.004099},
+            content:'<h3>3:04pm, Jan 24, 2019 </h3><p>A very well dressed guy walking slowly smoking his weed on his right hand. </br> About 190cm in height.</p>'
+          },
+          {
+            coords:{lat:40.750199,lng:-74.006018},
+            content:'<h3>3:07pm, Jan 24, 2019 </h3><p>A lady walking with an white husky, a yellow lab and a brown lab </br>with her big blue mountain backpack.</p>'
+          }
+
+        ];
+
+        //loop through markers
+
+        for(var i = 0;i < markers.length;i++){
+          // Add markers
+          addMarker(markers[i]);
+        }
+
+        //Add marker function
+        function addMarker(props){
+          var marker = new google.maps.Marker({
+          position:props.coords,
+          map:map,
+          //icon:props.iconimage
+
+        });
+
+
+          //check for custom icon
+          if(props.iconimage){
+            //set icon image
+            marker.setIcon(props.iconimage);
+          }
+
+          // Check content 
+          if(props.content){
+            var infoWindow = new google.maps.InfoWindow({
+          content:props.content
+            });
+
+        marker.addListener('click',function(){
+          infoWindow.open(map, marker);
+            });
+          }
+        }
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDynf2gNFW6pkOF944BtPgCCoT2jez9AnI&callback=initMap"
+    async defer></script>
+  </body>
+</html>
