@@ -1,0 +1,557 @@
+<!DOCTYPE>
+<title>Google Maps Commute</title>
+<link rel="stylesheet" type="text/css" href="webfontkit-20190207-184222/stylesheet.css">
+
+<style>
+																		
+																		html, body, div, span, applet, object, iframe,
+																		h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+																		a, abbr, acronym, address, big, cite, code,
+																		del, dfn, em, img, ins, kbd, q, s, samp,
+																		small, strike, strong, sub, sup, tt, var,
+																		b, u, i, center,
+																		dl, dt, dd, ol, ul, li,
+																		fieldset, form, label, legend,
+																		table, caption, tbody, tfoot, thead, tr, th, td,
+																		article, aside, canvas, details, embed, 
+																		figure, figcaption, footer, header, hgroup, 
+																		menu, nav, output, ruby, section, summary,
+																		time, mark, audio, video {
+																			margin: 0;
+																			padding: 0;
+																			border: 0;
+																			font-size: 100%;
+																			font: inherit;
+																			vertical-align: baseline;
+																		}
+																		/* HTML5 display-role reset for older browsers */
+																		article, aside, details, figcaption, figure, 
+																		footer, header, hgroup, menu, nav, section {
+																			display: block;
+																		}
+																		body {
+																			line-height: 1;
+																		}
+																		ol, ul {
+																			list-style: none;
+																		}
+																		blockquote, q {
+																			quotes: none;
+																		}
+																		blockquote:before, blockquote:after,
+																		q:before, q:after {
+																			content: '';
+																			content: none;
+																		}
+																		table {
+																			border-collapse: collapse;
+																			border-spacing: 0;
+																		}
+																		
+																		
+																		
+																		
+																		/* CSS starts here*/ 
+
+
+
+html{
+	font-family: 'product_sansregular';
+}
+
+		/* MOBILE LAYOUT, 1 column */
+	body {
+	display: grid;
+	grid-template-columns: 100%;
+	grid-template-rows: 100vh 100vh 100vh 100vh 100vh 100vh 100vh 100vh 100vh 100vh 100vh ;
+	font-size: 6.5vw;
+	margin: 10px;
+	overflow-x: hidden;
+
+	}
+	
+	/* This goes all the same for any window width size */
+	
+	h1{
+	grid-column: 1 / 2;
+	grid-row: 1 / 2;	
+	border-top: 6px solid black;
+	padding: 15px;
+	font-size: 12vw;
+
+	}
+	
+	h2{
+	grid-column: 1 / 2;
+	grid-row: 2 / 4;	
+	border-top: 4px solid black;
+	padding: 15px;
+	font-size: 7vw;
+	line-height: 150%;
+
+	}
+	
+	h3{
+	grid-column: 1 / 2;
+	grid-row: 1 / 2;	
+	padding: 15px;
+	border-top: 4px solid black;
+	font-size: 10vw;
+	word-wrap: normal
+
+	}
+	
+	h4{
+	grid-column: 1 / 2;
+	grid-row: 2 / 3;	
+	padding-left: 15px;
+	word-wrap: normal
+
+	}
+	
+	h4{
+	padding-top: 1em;
+	line-height: 150%;
+
+	}
+	
+	/* Maybe change this in every window size. 
+	There is a big gap between numbers and instruction. */
+	.grid-cells{
+		display: grid;
+		grid-template-columns: 100%;
+		grid-template-rows: 10vh 20vh 70vh;
+
+
+	}
+	
+	.cover-page{
+		display: grid;
+		padding: 10px;
+		grid-template-columns: 100%;
+		grid-template-rows: 30vh 70vh;
+
+	}
+	
+	.info-cell{
+		padding: 10px;
+		grid-column: 1 / 2;
+		grid-row: 11 / 12;
+
+
+	}
+
+	.computer{
+		display: none;
+	}
+
+	.clock {
+		grid-column: 1 / 2;
+		grid-row: 2 / 3;
+		border-top: 4px solid black;
+		display: grid;
+		grid-template-columns: 100%;
+		grid-template-rows: 33vh 33vh 33vh;
+	}
+
+	.hour{
+		margin: auto;
+ 		grid-column: 1 / 2;
+ 		grid-row: 1 / 2;
+
+
+	}
+
+	.minute{
+		margin: auto;
+ 		grid-column: 1 / 2;
+ 		grid-row: 2 / 3;
+
+ 	
+	}
+
+
+	.second{
+		margin: auto;
+ 		grid-column: 1 / 2;
+ 		grid-row: 3 / 4;
+
+
+	}
+
+	.img1{
+		height: 85%;
+ 		animation-name: myboxanimation; /* This is the name of the animation */
+ 		animation-duration: 3600s;
+ 		animation-iteration-count: infinite; /* Infinite makes it loop; you can specify a number, too */
+ 		animation-direction: reverse; /* normal, reverse, alternate, and alternate-reverse*/
+ 		animation-timing-function: linear;
+	}
+
+	@keyframes myboxanimation { /* myboxanimation is an arbitrary name */
+	  from { 
+	    transform:rotate(360deg);
+	  }
+	  
+	  to {
+	    transform:rotate(0deg);
+	  }
+	}
+	
+	.img2{
+		height: 85%;
+	 	animation-name: myboxanimation; /* This is the name of the animation */
+	 	animation-duration: 60s;
+	 	animation-iteration-count: infinite; /* Infinite makes it loop; you can specify a number, too */
+	 	animation-direction: reverse; /* normal, reverse, alternate, and alternate-reverse*/
+	 	animation-timing-function: linear;
+	}
+
+	@keyframes myboxanimation { /* myboxanimation is an arbitrary name */
+	  from { 
+		transform:rotate(360deg);
+	  }
+	  
+	  to {
+		transform:rotate(0deg);
+	  }
+	}
+	
+	.img3{
+		height: 85%;
+		animation-name: myboxanimation; /* This is the name of the animation */
+		animation-duration: 1s;
+		animation-iteration-count: infinite; /* Infinite makes it loop; you can specify a number, too */
+		animation-direction: reverse; /* normal, reverse, alternate, and alternate-reverse*/
+		animation-timing-function: linear;
+	}
+	
+	@keyframes myboxanimation { /* myboxanimation is an arbitrary name */
+	  from { 
+		transform:rotate(360deg);
+	  }
+	  
+	  to {
+		transform:rotate(0deg);
+	  }
+	}
+	
+	/* DESKTOP LAYOUT SMALL WINDOW, 2 column */
+@media (hover) and (min-width: 600px) {
+	body {
+		display: grid;
+		grid-template-columns: 50% 50%;
+		grid-template-rows: 100vh 100vh 50vh 50vh 50vh 50vh 50vh;
+		font-size: 6.5vw;
+	}
+
+	h1{
+		font-size: 8vw;
+	}
+	
+	h2{
+		font-size: 4.5vw;
+	}
+
+	h3{
+		font-size: 50%;
+	}
+
+	h4{
+		font-size: 38%;
+		line-height: 150%;
+	}
+
+	.grid-cells{
+		display: grid;
+		grid-template-columns: 100%;
+		grid-template-rows: 13% 13% auto;
+		padding: 10px;
+
+	}
+
+	.cover-page{
+		display: grid;
+		grid-template-columns: 100%;
+		grid-template-rows: 33.3333% 33.3333% 33.3333%;
+		grid-column: 1 / 3;
+		grid-row: 1 / 2;
+		
+	}
+
+	.info-cell{
+		grid-column: 1 / 3;
+		grid-row: 7 / 8;
+	}
+
+	.computer, .minute, .second{
+		display: block;
+	}
+	.mobile, .hour{
+		display: none;
+	}
+
+	.clock {
+		margin: 10px;
+		grid-column: 1 / 3;
+		grid-row: 2 / 3;
+		border-top: 4px solid black;
+		display: grid;
+		grid-template-columns: 50% 50%;
+		grid-template-rows: 20vh 60vh 20vh;
+	}
+
+
+	.minute{
+		width: 90%;
+ 		grid-column: 1 / 2;
+ 		grid-row: 2 / 3;
+ 		margin: auto;
+
+	}
+
+	.second{
+		width: 90%;
+ 		grid-column: 2 / 3;
+ 		grid-row: 2 / 3;
+ 		margin: auto;
+ 	
+	}
+
+	.img1, .img2, .img3{
+		width: 100%;
+	}
+}
+	
+	/* DESKTOP LAYOUT MEDIUM WINDOW, 3 column */
+@media (hover) and (min-width: 800px) {
+	body{
+		display: grid;
+		grid-template-columns: 33.33333% 33.33333% 33.33333%;
+		grid-template-rows: 100vh 100vh 50vh 50vh 50vh;
+		margin: 10px;
+	}
+
+	h1{
+		font-size: 7vw;
+	}
+	
+	h2{
+		font-size: 4vw;
+	}
+
+	h3{
+		font-size: 45%;
+	}
+
+	h4{
+		font-size: 30%;
+
+	}
+
+	.grid-cells{
+		display: grid;
+		grid-template-columns: 100%;
+		grid-template-rows: 17% 17% auto;
+		padding: 10px;
+
+	}
+
+	.cover-page{
+		grid-column: 1 / 4;
+		grid-row: 1 / 2;
+		
+
+	}
+
+	.info-cell{
+		grid-column: 3 / 4;
+		grid-row: 5 / 6;
+
+	}
+
+	.mobile{
+		display: none;
+	}
+
+	.clock {
+		grid-column: 1 / 4;
+		grid-row: 2 / 3;
+	}
+	.clock {
+		margin: 10px;
+		grid-column: 1 / 4;
+		grid-row: 2 / 3;
+		border-top: 4px solid black;
+		display: grid;
+		grid-template-columns: 33.3333% 33.3333% 33.3333%;
+		grid-template-rows: 20vh 60vh 20vh;
+	}
+
+	.hour{
+		width: 90%;
+		display: block;
+ 		grid-column: 1 / 2;
+ 		grid-row: 2 / 3;
+ 		margin: auto;
+
+	}
+
+	.minute{
+		width: 90%;
+ 		grid-column: 2 / 3;
+ 		grid-row: 2 / 3;
+ 		margin: auto;
+
+	}
+
+	.second{
+		width: 90%;
+ 		grid-column: 3 / 4;
+ 		grid-row: 2 / 3;
+ 		margin: auto;
+ 	
+	}
+
+
+}
+
+
+	/* DESKTOP LAYOUT LARGE WINDOW, 4 column */
+@media (hover) and (min-width: 1000px) {
+	body{
+		display: grid;
+		grid-template-columns: 25% 25% 25% 25%;
+		grid-template-rows: 100vh 100vh 50vh 50vh 40vh;
+		margin: 10px;
+	}
+
+	h3{
+		font-size: 40%;
+	}
+
+	h4{
+		font-size: 22%;
+	}
+
+	.cover-page{
+		grid-column: 1 / 5;
+		grid-row: 1 / 2;
+		
+	}
+
+	.info-cell{
+		grid-column: 1 / 5;
+		grid-row: 5 / 6;
+	}
+
+	.mobile{
+		display: none;
+	}
+
+	.clock {
+		grid-column: 1 / 5;
+		grid-row: 2 / 3;
+	}
+
+}
+	
+
+</style>
+
+
+
+
+
+<body>
+	<div class="cover-page">
+		<h1>Google Maps</h1>
+		<h2 class="computer">How to plan your commute on a computer!</h2>
+		<h2 class="mobile">How to plan your commute on a mobile device!</h2>
+
+	</div>
+
+	<div class="clock">
+		<div class="hour">
+			<img src="images/circle.svg" alt="hour" class="img1">
+		</div>
+		<div class="minute">
+			<img src="images/circle.svg" alt="minute" class="img2">
+		</div>
+		<div class="second">
+			<img src="images/circle.svg" alt="second" class="img3">
+		</div>
+			
+	</div>	
+
+	<div class="grid-cells"><h3>1</h3>
+		<h4 class="computer">Open a new tab on your browser and open Google Maps. 
+		</h4>
+		<h4 class="mobile">On your mobile device, open the Google Maps app. 
+		</h4>
+
+	
+	</div>
+
+	<div class="grid-cells"><h3>2</h3> 
+		<h4>Make sure you're signed in to your account.  
+		</h4>
+	</div>
+
+	<div class="grid-cells"><h3>3</h3> 
+		<h4 class="computer">On the left menu, click "Set a home address."
+		</h4>
+		<h4 class="mobile">At the bottom, tap commute to set up your home and work address.
+		</h4>
+	</div>
+
+	<div class="grid-cells"><h3>4</h3> 
+		<h4 class="computer">Type in your home address in the search bar and click "Save" button.  
+		</h4>
+		<h4 class="mobile">Type in your home address in the search bar and tap "Next" button.  
+		</h4>
+	</div>
+
+	<div class="grid-cells"><h3>5</h3> 
+		<h4 class="computer">Once you are back to the main page, click "Set a work address" on the left menu.
+		</h4>
+		<h4 class="mobile">Type in your work address in the search bar and tap "Done" button.
+		</h4>
+	</div>
+
+	<div class="grid-cells"><h3>6</h3> 
+		<h4 class="computer">Type in your work address in the search bar and click "save" button.
+		</h4>
+		<h4 class="mobile">You will get a pop-up screen of asking whether to turn on the Location History option. You can choose either "No thanks" or "Turn on." 
+		</h4>
+	</div>
+
+	<div class="grid-cells"><h3>7</h3> 
+		<h4 class="computer">Now on the left menu, you will see the best recommended route from Google's database!
+		</h4>
+		<h4 class="mobile">Now on the commute menu at the bottom will show you the best route from Google's database!
+		</h4>
+	</div>
+
+	<div class="grid-cells"><h3>Tip</h3> 
+		<h4>You can always edit your home or work address on the left menu. 
+		</h4>
+	</div>
+
+	
+	<div class="info-cell">
+		<h3>Still need help?</h3>
+
+		<h4> More help on <a href="https://support.google.com/maps/answer/7565193?co=GENIE.Platform%3DDesktop&hl=en&oco=0">planning your commute or trip</a>.
+		</h4>
+		
+		<h4> More help on <a href="https://support.google.com/maps/answer/3093979">set or change your home and work address</a>.
+		</h4>
+		
+		<h4> Learn how to <a href="https://www.google.com">sign in to or switch accounts</a>.
+		</h4>
+		
+	</div>
+	
+</body>
+
