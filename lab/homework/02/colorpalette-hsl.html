@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Eddie's color palette</title>
+	<style>
+		html, body, div{
+			width: 100vw;
+			height: 100vh;
+		}
+		body{
+			margin: 0;
+			display: flex;
+			flex-direction: row;
+		}
+	</style>
+</head>
+<body>
+<script>
+
+function randInt(ceiling) {
+	// return = "turn into"
+	return Math.floor(Math.random() * Math.floor(ceiling));
+}
+
+var counter = 0;
+//I did "1 < counter" so I can get at least 2 colors in my palette. Am I right?
+while(1 < counter < (Math.random()*7)){
+	var column = document.createElement("div");
+	document.body.appendChild(column);
+	column.innerHTML = color;
+	var color = "hsl("+randInt(360)+", "+randInt(101)+"%, "+randInt(101)+"%)";
+	column.style.backgroundColor = color;
+	counter = counter + 1;
+};
+</script>
+</body>
+</html>
