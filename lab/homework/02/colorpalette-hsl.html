@@ -18,12 +18,12 @@
 <script>
 
 function randInt(ceiling) {
-	// return = "turn into"
 	return Math.floor(Math.random() * Math.floor(ceiling));
 }
 
 var counter = 0;
-//I did "1 < counter" so I can get at least 2 colors in my palette. Am I right?
+// I did "1 < counter" so I can get at least 2 colors in my palette. Am I right?
+// but then I get more than 6 color palettes( counter < (Math.random()*7) ).. What is going on??
 while(1 < counter < (Math.random()*7)){
 	var column = document.createElement("div");
 	document.body.appendChild(column);
