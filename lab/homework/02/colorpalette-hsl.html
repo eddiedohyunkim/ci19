@@ -6,11 +6,14 @@
 		html, body, div{
 			width: 100vw;
 			height: 100vh;
-		}
-		body{
 			margin: 0;
 			display: flex;
 			flex-direction: row;
+		}
+		div{
+			justify-content: center;
+			align-items: center;
+			font-size: 2vmin;
 		}
 	</style>
 </head>
@@ -22,13 +25,12 @@ function randInt(ceiling) {
 }
 
 var counter = 0;
-// I did "1 < counter" so I can get at least 2 colors in my palette. Am I right?
-// but then I get more than 6 color palettes( counter < (Math.random()*7) ).. What is going on??
-while(1 < counter < (Math.random()*7)){
+
+while(counter < (Math.random()*7) + 2){
 	var column = document.createElement("div");
 	document.body.appendChild(column);
-	column.innerHTML = color;
 	var color = "hsl("+randInt(360)+", "+randInt(101)+"%, "+randInt(101)+"%)";
+	column.innerHTML = color;
 	column.style.backgroundColor = color;
 	counter = counter + 1;
 };
