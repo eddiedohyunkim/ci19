@@ -1,4 +1,4 @@
-function awesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
+function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
 
 $(function() {
     $("form").on("submit", function(e) {
@@ -9,7 +9,7 @@ $(function() {
             type: "video",
             q: encodeURIComponent($("#search").val()).replace(/%20/g, "+"),
             maxResults: 1,
-            order: "date",
+            order: "date"
        }); 
        // execute the request
        request.execute(function(response) {
@@ -17,7 +17,7 @@ $(function() {
           $("#results").html("");
           $.each(results.items, function(index, item) {
             $.get("tpl/item.html", function(data) {
-                $("#results").append(awesome(data, [{"videoid":item.id.videoId}])); //"title":item.snippet.title,
+                $("#results").append(tplawesome(data, [{"videoid":item.id.videoId}])); //"title":item.snippet.title,
             });
           });
           resetVideoHeight();
@@ -34,6 +34,6 @@ function resetVideoHeight() {
 function init() {
     gapi.client.setApiKey("AIzaSyAudv8SOfdhPSJJ5tGLQNLHrh-nOCsU7UA");
     gapi.client.load("youtube", "v3", function() {
-        // yt api is ready
+        // youtube api is ready
     });
 }
