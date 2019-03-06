@@ -9,7 +9,7 @@ $(function() {
             type: "video",
             q: encodeURIComponent($("#search").val()).replace(/%20/g, "+"),
             maxResults: 1,
-            order: "viewCount",
+            order: "relevance",
        }); 
        // execute the request
        request.execute(function(response) {
