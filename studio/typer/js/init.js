@@ -21,24 +21,29 @@ $(document).ready(function() {
     	var char = String.fromCharCode(a.which);
     	createElement(char);
 
-    	text = text + char;
-    	var str = text;
-    	var words = str.split(" ");
-    	var wordCount = words.length 
-    	console.log (words); 
-    	console.log (wordCount);
-    	document.getElementById("wordCount").innerHTML = wordCount;
+    		text = text + char;
+    		console.log(text);
+    		var regex = /\s+/g;
+    		var wordCount = text.trim().replace(regex, ' ').split(' ').length;
+    		$('#wordCount').html(wordCount);
 
+    		if(wordCount == 0) {
+    			$('#wordCount').html(0);
+    			return;
+    		}
+
+    var str = text;
+    var words = str.trim().replace(regex, ' ').split(' ');
+    // words in array
+   	console.log (words);    	
 
 });
-
-
 
 
  	// function keys 
 	$(document).on("keydown", function(b) {
 
-	// delete key
+	// delete 
     if (b.which == 8){
 		b.preventDefault();
     	entryCount ++;
@@ -49,29 +54,23 @@ $(document).ready(function() {
 		deleteElement();
     }
    	
-   	// enter key 
+   	// enter 
    	if (b.which == 13){
-
      	b.preventDefault();
  		enterCount ++;
  		linebreakElement(); 
 	}
 
-	// space key
+	// space 
     if (b.which == 32){
      	displayCount --;
 	}
 	
-    //var elem = $('#cursor');
-	//elem.append ( $('#word-count'));
 
-	console.log("entry #" + entryCount + " : " + String.fromCharCode(b.which) + " |  " + displayCount + " CHAR " + " |  " + " Line " + enterCount);
+	//console.log("entry #" + entryCount + " : " + String.fromCharCode(b.which) + " |  " + displayCount + " CHAR " + " |  " + " Line " + enterCount);
 
     
 	});
-
-	
-
 
 });
 
@@ -188,6 +187,7 @@ function deleteElement() {
 }
 
 function linebreakElement() {
+	var elem = $('#cursor');
 	$(".inner").after().last().append('</br>');
 }
 
