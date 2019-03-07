@@ -1,6 +1,6 @@
 function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
 
-function init() {
+function initAPI() {
     gapi.client.setApiKey("AIzaSyB5vBH0Y4SUC-9WY6IFGqVnETMMeOlQbEA");
     gapi.client.load("youtube", "v3", function() {
         // youtube api is ready
@@ -54,7 +54,7 @@ var text = "";
 
 $(document).ready(function() {
 
-	init();
+	initAPI();
 
 	// any entry counter
 	var entryCount = 1;
