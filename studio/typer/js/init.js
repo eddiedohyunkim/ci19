@@ -1,4 +1,58 @@
+function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
+
+function initAPI() {
+    gapi.client.setApiKey("AIzaSyAudv8SOfdhPSJJ5tGLQNLHrh-nOCsU7UA");
+    gapi.client.load("youtube", "v3", function() {
+        // youtube api is ready
+    });
+}
+
+function apiRequest() {
+	var words = text.trim().replace(/\s+/g, ' ').split(' ');
+	var search = words.join(" ");
+	// prepare the request
+	var request = gapi.client.youtube.search.list({
+	   part: "snippet",
+	   type: "video",
+	   q: encodeURIComponent(search).replace(/%20/g, "+"),
+	   maxResults: 1,
+	   order: "date"
+	}); 
+
+	// execute the request
+	request.execute(function(response) {
+	 var results = response.result;
+	 $("#results").html("");
+	 $.each(results.items, function(index, item) {
+	   $.get("tpl/item.html", function(data) {
+	       $("#results").append(tplawesome(data, [{"videoid":item.id.videoId}]));
+	   });
+	 });
+	 resetVideoHeight();
+	});	
+}
+
+function resetVideoHeight() {
+    $(".video").css("height", $("#results").width() * 9/16);
+}
+
+
+function updateWords(str) {
+	var words = str.trim().replace(/\s+/g, ' ').split(' ');
+	var wordCount = words.length;
+    $('#wordCount').html(wordCount);
+
+	// do something with words
+	console.log(words);
+	// youtube stuff
+
+}
+
+var text = "";
+
 $(document).ready(function() {
+
+	initAPI();
 
 	// any entry counter
 	var entryCount = 1;
@@ -9,11 +63,11 @@ $(document).ready(function() {
 	// line counter
 	var enterCount = 1;
 
-	var text = "";
 
   	// capture key presses
  	$(document).on("keypress", function(a) {
  		a.preventDefault();
+
     	entryCount ++;
     	displayCount ++;
 
@@ -21,23 +75,25 @@ $(document).ready(function() {
     	var char = String.fromCharCode(a.which);
     	createElement(char);
 
-    		text = text + char;
-    		console.log(text);
-    		var regex = /\s+/g;
-    		var wordCount = text.trim().replace(regex, ' ').split(' ').length;
-    		$('#wordCount').html(wordCount);
-
-    		if(wordCount == 0) {
+    	/*if(wordCount == 0) {
     			$('#wordCount').html(0);
     			return;
-    		}
+    		}*/
 
-    var str = text;
-    var words = str.trim().replace(regex, ' ').split(' ');
-    // words in array
-   	console.log (words);    	
+    	// word counter
+    	text = text + char;
+    	// var regex = /\s+/g;
+    	// var wordCount = text.trim().replace(regex, ' ').split(' ').length;
+    	updateWords(text);
 
-});
+		// words in array(space doesnt count)
+		// var str = text;
+		// var words = str.trim().replace(regex, ' ').split(' ');
+		//console.log(text);
+		// console.log (words);
+		
+	});
+
 
 
  	// function keys 
@@ -48,6 +104,7 @@ $(document).ready(function() {
 		b.preventDefault();
     	entryCount ++;
     	displayCount --;
+
     	if (displayCount < 0) {
     	  displayCount = 0;
     	}
@@ -177,13 +234,19 @@ var elem = $('#cursor');
 	if (c == "?") { elem.before('<span class="inner">?</span>'); }
 	if (c == '"') { elem.before('<span class="inner">"</span>'); }
 	if (c == "'") { elem.before("<span class='inner'>'</span>"); }
-	if (c == " ") { elem.before('<span class="inner">&nbsp;</span>'); }
+	if (c == " ") { 
+		elem.before('<span class="inner">&nbsp;</span>');
+		apiRequest();
+	}
 
 };
 
 
 function deleteElement() {
 	$(".inner").last().remove();
+	text = text.slice(0, -1);
+	updateWords(text);
+
 }
 
 function linebreakElement() {

@@ -3,25 +3,33 @@ function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{
 $(function() {
     $("form").on("submit", function(e) {
        e.preventDefault();
-       // prepare the request
-       var request = gapi.client.youtube.search.list({
-            part: "snippet",
-            type: "video",
-            q: encodeURIComponent($("#search").val()).replace(/%20/g, "+"),
-            maxResults: 1,
-            order: "date"
-       }); 
-       // execute the request
-       request.execute(function(response) {
-          var results = response.result;
-          $("#results").html("");
-          $.each(results.items, function(index, item) {
-            $.get("tpl/item.html", function(data) {
-                $("#results").append(tplawesome(data, [{"videoid":item.id.videoId}])); //"title":item.snippet.title,
-            });
-          });
-          resetVideoHeight();
-       });
+         $(document).on("keydown", function(a) {
+            //space key
+            if (a.which == 32) {
+              // prepare the request
+              var request = gapi.client.youtube.search.list({
+                   part: "snippet",
+                   type: "video",
+                   q: encodeURIComponent($("#search").val()).replace(/%20/g, "+"),
+                   maxResults: 1,
+                   order: "date"
+              }); 
+
+              // execute the request
+              request.execute(function(response) {
+                 var results = response.result;
+                 $("#results").html("");
+                 $.each(results.items, function(index, item) {
+                   $.get("tpl/item.html", function(data) {
+                       $("#results").append(tplawesome(data, [{"videoid":item.id.videoId}])); //"title":item.snippet.title,
+                   });
+                 });
+                 resetVideoHeight();
+              });
+              return;
+            }
+              
+        });
     });
     
     $(window).on("resize", resetVideoHeight);
