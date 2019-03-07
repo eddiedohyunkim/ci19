@@ -3,7 +3,9 @@ html, body{
 	font-size: 50px;	
 	line-height: 1em;
 }
-
+header{
+	height: 50px;
+}
 #cursor {
 	animation: blinker 1s step-end infinite; 
 	/*you can change 'step-end' to 'linear' for smooth transition*/
@@ -16,7 +18,7 @@ html, body{
 #container {
 	width: 100vw;	
 	word-wrap: break-word;
-	margin: 15px;
+	margin: 0 0 0 15px;
 
 }
 #results{
@@ -25,6 +27,8 @@ html, body{
 }
 
 #result {
+	position: absolute;
+	bottom: 5px;
 	font-size: 25px;
 	margin: 0 0 0 15px;
 }
