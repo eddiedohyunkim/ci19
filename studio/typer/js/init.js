@@ -1,7 +1,7 @@
 function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
 
 function initAPI() {
-    gapi.client.setApiKey("AIzaSyCa8oahtV-IzePgYb2_pOrtAABmSFZalyY");
+    gapi.client.setApiKey("AIzaSyDoELYDT8j1uU6HoxVmYRzvSk5g5BoRxqw");
     gapi.client.load("youtube", "v3", function() {
         // youtube api is ready
     });
