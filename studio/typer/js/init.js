@@ -1,17 +1,20 @@
 function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
 
-function init() {
-    gapi.client.setApiKey("AIzaSyB5vBH0Y4SUC-9WY6IFGqVnETMMeOlQbEA");
+function initAPI() {
+    gapi.client.setApiKey("AIzaSyCa8oahtV-IzePgYb2_pOrtAABmSFZalyY");
     gapi.client.load("youtube", "v3", function() {
         // youtube api is ready
     });
 }
 
+
 function apiRequest() {
 
-	var words = text.trim().replace(/\s+/g, ' ').split(' ');
-	var search = words.join(" ");
-	e.preventDefault();
+	var words = text.trim().replace(/\s+/g, " ").split(" ");
+	var search = words[words.length -1];
+	console.log("search result : " + search);
+	//console.log(words.length);
+
 	// prepare the request
 	var request = gapi.client.youtube.search.list({
 	   part: "snippet",
@@ -20,123 +23,89 @@ function apiRequest() {
 	   maxResults: 1,
 	   order: "date"
 	}); 
-
+	
 	// execute the request
 	request.execute(function(response) {
-	 var results = response.result;
-	 $("#results").html("");
-	 $.each(results.items, function(index, item) {
-	   $.get("tpl/item.html", function(data) {
-	       $("#results").append(tplawesome(data, [{"videoid":item.id.videoId}]));
-	   });
-	 });
-	 resetVideoHeight();
-	});	
+	console.log(response);
+	var results = response.result;
+	//$("#results").html("");
+	 	$.each(results.items, function(index, item) {
+			$.get("tpl/item.html", function(data) {
+				$("#results").append(tplawesome(data, [{"videoid":item.id.videoId}]));
+			});
+		});
+	});
+
 }
 
-function resetVideoHeight() {
-    $(".video").css("height", $("#results").width() * 9/16);
-}
 
 
 function updateWords(str) {
-	var words = str.trim().replace(/\s+/g, ' ').split(' ');
+	var words = str.trim().replace(/\s+/g, " ").split(" ");
 	var wordCount = words.length;
-    $('#wordCount').html(wordCount);
-
-	// do something with words
+     $("#wordCount").html(wordCount);
 	console.log(words);
-	// youtube stuff
+ 
+}
 
+// button 
+function onoff(){
+
+	var textarea = document.getElementById("container");
+
+	button = document.getElementById("onoff").value;
+ 	if(button == "show text"){
+ 		document.getElementById("onoff").value="hide text";
+ 		textarea.style.display = "block";
+ 	}else{
+ 		document.getElementById("onoff").value="show text";
+ 		textarea.style.display = "none";
+ 	}
 }
 
 var text = "";
 
 $(document).ready(function() {
 
-	init();
-
-	// any entry counter
-	var entryCount = 1;
-
-	// character counter
-	var displayCount = 1;
-
-	// line counter
-	var enterCount = 1;
-
-
   	// capture key presses
  	$(document).on("keypress", function(a) {
+ 		initAPI();
  		a.preventDefault();
-
-    	entryCount ++;
-    	displayCount ++;
-
     	// translate unicode to characters        
     	var char = String.fromCharCode(a.which);
     	createElement(char);
-
-    	/*if(wordCount == 0) {
-    			$('#wordCount').html(0);
-    			return;
-    		}*/
-
-    	// word counter
     	text = text + char;
-    	// var regex = /\s+/g;
-    	// var wordCount = text.trim().replace(regex, ' ').split(' ').length;
-    	updateWords(text);
+		updateWords(text);
 
-		// words in array(space doesnt count)
-		// var str = text;
-		// var words = str.trim().replace(regex, ' ').split(' ');
-		//console.log(text);
-		// console.log (words);
+
 		
 	});
-
-
-
+ 
  	// function keys 
 	$(document).on("keydown", function(b) {
 
-	// delete 
-    if (b.which == 8){
-		b.preventDefault();
-    	entryCount ++;
-    	displayCount --;
-
-    	if (displayCount < 0) {
-    	  displayCount = 0;
+		// delete 
+    	if (b.which == 8){
+			b.preventDefault();
+			deleteElement();
     	}
-		deleteElement();
-    }
-   	
-   	// enter 
-   	if (b.which == 13){
-     	b.preventDefault();
- 		enterCount ++;
- 		linebreakElement(); 
-	}
+   		
+   		// enter 
+   		if (b.which == 13){
+    	 	b.preventDefault();
+ 			linebreakElement(); 
+		}
 
-	// space 
-    if (b.which == 32){
-     	displayCount --;
-	}
+
 	
-
-	//console.log("entry #" + entryCount + " : " + String.fromCharCode(b.which) + " |  " + displayCount + " CHAR " + " |  " + " Line " + enterCount);
-
-    
-	});
+	}); 
 
 });
 
 
 function createElement(c) {
 
-var elem = $('#cursor');
+var elem = $("#cursor");
 	if (c == "A") { elem.before('<span class="inner">A</span>'); }
 	if (c == "B") { elem.before('<span class="inner">B</span>'); }
 	if (c == "C") { elem.before('<span class="inner">C</span>'); }
@@ -238,8 +207,8 @@ var elem = $('#cursor');
 	if (c == "'") { elem.before("<span class='inner'>'</span>"); }
 	if (c == " ") { 
 		elem.before('<span class="inner">&nbsp;</span>');
-		apiRequest();
-	}
+		apiRequest(); 
+		}
 
 };
 
@@ -248,6 +217,8 @@ function deleteElement() {
 	$(".inner").last().remove();
 	text = text.slice(0, -1);
 	updateWords(text);
+	//apiRequest(); 
+
 
 }
 

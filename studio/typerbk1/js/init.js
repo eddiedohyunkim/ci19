@@ -1,7 +1,7 @@
 function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
 
 function initAPI() {
-    gapi.client.setApiKey("AIzaSyDgYuyIubjyUh9Job9tMvkOawGRmncPdNM");
+    gapi.client.setApiKey("AIzaSyCa8oahtV-IzePgYb2_pOrtAABmSFZalyY");
     gapi.client.load("youtube", "v3", function() {
         // youtube api is ready
     });
@@ -10,7 +10,7 @@ function initAPI() {
 
 function apiRequest() {
 
-	var words = text.trim().replace(/\s+/g, ' ').split(' ');
+	var words = text.trim().replace(/\s+/g, " ").split(" ");
 	var search = words[words.length -1];
 	console.log("search result : " + search);
 	//console.log(words.length);
@@ -21,13 +21,14 @@ function apiRequest() {
 	   type: "video",
 	   q: encodeURIComponent(search).replace(/%20/g, "+"),
 	   maxResults: 1,
-	   order: "relevance"
+	   order: "date"
 	}); 
 	
 	// execute the request
 	request.execute(function(response) {
+	console.log(response);
 	var results = response.result;
-	$("#results").html("");
+	//$("#results").html("");
 	 	$.each(results.items, function(index, item) {
 			$.get("tpl/item.html", function(data) {
 				$("#results").append(tplawesome(data, [{"videoid":item.id.videoId}]));
@@ -38,10 +39,11 @@ function apiRequest() {
 }
 
 
+
 function updateWords(str) {
-	var words = str.trim().replace(/\s+/g, ' ').split(' ');
+	var words = str.trim().replace(/\s+/g, " ").split(" ");
 	var wordCount = words.length;
-     $('#wordCount').html(wordCount);
+     $("#wordCount").html(wordCount);
 	console.log(words);
  
 }
@@ -51,7 +53,7 @@ function onoff(){
 
 	var textarea = document.getElementById("container");
 
-	button = document.getElementById('onoff').value;
+	button = document.getElementById("onoff").value;
  	if(button == "show text"){
  		document.getElementById("onoff").value="hide text";
  		textarea.style.display = "block";
@@ -72,12 +74,8 @@ $(document).ready(function() {
     	// translate unicode to characters        
     	var char = String.fromCharCode(a.which);
     	createElement(char);
-
     	text = text + char;
 		updateWords(text);
-		var words = text.trim().replace(/\s+/g, ' ').split(' ');
-		var counter = words.length;
-
 
 
 		
@@ -107,7 +105,7 @@ $(document).ready(function() {
 
 function createElement(c) {
 
-var elem = $('#cursor');
+var elem = $("#cursor");
 	if (c == "A") { elem.before('<span class="inner">A</span>'); }
 	if (c == "B") { elem.before('<span class="inner">B</span>'); }
 	if (c == "C") { elem.before('<span class="inner">C</span>'); }
@@ -219,7 +217,8 @@ function deleteElement() {
 	$(".inner").last().remove();
 	text = text.slice(0, -1);
 	updateWords(text);
-	apiRequest(); 
+	//apiRequest(); 
+
 
 }
 
