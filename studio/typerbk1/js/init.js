@@ -1,7 +1,7 @@
 function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
 
 function initAPI() {
-    gapi.client.setApiKey("AIzaSyDdE4vQaRGC5YS83IHTHWKiYzUz_o2Y1Zo");
+    gapi.client.setApiKey("AIzaSyDgYuyIubjyUh9Job9tMvkOawGRmncPdNM");
     gapi.client.load("youtube", "v3", function() {
         // youtube api is ready
     });
@@ -13,6 +13,7 @@ function apiRequest() {
 	var words = text.trim().replace(/\s+/g, ' ').split(' ');
 	var search = words[words.length -1];
 	console.log("search result : " + search);
+	//console.log(words.length);
 
 	// prepare the request
 	var request = gapi.client.youtube.search.list({
@@ -35,6 +36,7 @@ function apiRequest() {
 	});
 
 }
+
 
 function updateWords(str) {
 	var words = str.trim().replace(/\s+/g, ' ').split(' ');
@@ -73,6 +75,11 @@ $(document).ready(function() {
 
     	text = text + char;
 		updateWords(text);
+		var words = text.trim().replace(/\s+/g, ' ').split(' ');
+		var counter = words.length;
+
+
+
 		
 	});
  
