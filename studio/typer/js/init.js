@@ -1,7 +1,7 @@
 function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
 
 function initAPI() {
-    gapi.client.setApiKey("AIzaSyB2NvZ8j8MtiNoXL8V7tzz9FALwWfWesbI");
+    gapi.client.setApiKey("AIzaSyBW5E9Z4rga5yonNAXYJ39EDxGAbB0kYb0");
     gapi.client.load("youtube", "v3", function() {
         // youtube api is ready
     });
@@ -49,19 +49,19 @@ function updateWords(str) {
 }
 
 // button 
-function onoff(){
-
-	var textarea = document.getElementById("container");
-
-	button = document.getElementById("onoff").value;
- 	if(button == "show text"){
- 		document.getElementById("onoff").value="hide text";
- 		textarea.style.display = "block";
- 	}else{
- 		document.getElementById("onoff").value="show text";
- 		textarea.style.display = "none";
- 	}
-}
+//function onoff(){
+//
+//	var textarea = document.getElementById("container");
+//
+//	button = document.getElementById("onoff").value;
+// 	if(button == "show text"){
+// 		document.getElementById("onoff").value="hide text";
+// 		textarea.style.display = "block";
+// 	}else{
+// 		document.getElementById("onoff").value="show text";
+// 		textarea.style.display = "none";
+// 	}
+//}
 
 var text = "";
 
