@@ -7,26 +7,26 @@
 <script>
 
 
-var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/lab/classwork/09/water.json"
+var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/lab/classwork/09/lottery.json"
 fetch(url)
 	.then(function(response){return response.json();})
 	.then(function(json){buildPage(json);})
 
 function buildPage(data) {
 	for (var i = 0; i < data.length; i += 1){
-		var kind = document.createElement("h1");
-		var oz = document.createElement("h2");
+		var dates = document.createElement("h1");
+		var winners = document.createElement("h2");
 		var time = document.createElement("h3");
-		document.body.appendChild(kind);
-		document.body.appendChild(oz);
+		document.body.appendChild(dates);
+		document.body.appendChild(winners);
 		document.body.appendChild(time);
 
 		//var image = document.createElement("img");
 		//image.setAttribute("src",data[i].url);
 		//document.body.appendChild(image);
 
-		kind.innerHTML = data[i].kind;
-		oz.innerHTML = data[i].oz + " ounces";
+		dates.innerHTML = data[i].dates;
+		winners.innerHTML = data[i].winners + " ounces";
 		time.innerHTML = data[i].time + " pm";
 
 		if(data[i].kind == "coffee") {
