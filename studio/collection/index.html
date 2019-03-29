@@ -47,7 +47,7 @@
 					color: rgba(255,255,255,0.75);
 					
 				}
-			
+			/*
 			button {
 				color: rgba(127,255,255,0.75);
 				background: transparent;
@@ -215,26 +215,19 @@
 				//"45", 5, 5,
 			];
 
+			console.log(table);
+
 			var camera, scene, renderer;
 			var controls;
 			var objects = [];
 			var targets = { table: [], grid: [] };
 
-			//var batch = table.slice(0,18);
-			//console.log(batch);
-
 			init();
 			animate();
-
-
 
 			for ( var i = 0; i < table.length; i += 3) {
 				console.log( table[ i + 1 ] );
 
-				function rows(one){
-				return one = 1;
-			}
-			console.log(table.find(rows));
 
 			}	
 
@@ -243,7 +236,7 @@
 				camera.position.z = 2000;
 				scene = new THREE.Scene();
 
-					// table
+					// 10 x 5
 					for ( var i = 0; i < table.length; i += 3) {
 
 						
@@ -273,19 +266,15 @@
 						targets.table.push( object );
 					}
 
-					//
-	
-	
-					// grid
+		
+					// 6 x 1
 					for ( var i = 0; i < objects.length + 2; i ++ ) {
 						var object = new THREE.Object3D();
 						object.position.x = ( ( i % 6 ) * 150 ) - 370;
 						object.position.y = ( - ( Math.floor( i ) % 1 ) * 150 ) ;
-						object.position.z = ( Math.floor( i / 6 )*100 ) -300;
+						object.position.z = ( Math.floor( i / 6 ) * 100 ) - 300;
 						targets.grid.push( object );
 					}
-
-					//
 
 				
 
