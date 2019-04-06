@@ -112,6 +112,7 @@
 					console.log(geometry);
 				}
 
+
 				// Lights
 				scene.add( new THREE.AmbientLight( 0x111111 ) );
 
@@ -121,13 +122,13 @@
 				scene.add( pointLight );
 
 				// label
-				var b1Div = document.createElement( 'div' );
-				b1Div.className = 'label';
-				b1Div.textContent = 'ball 1';
-				b1Div.style.marginTop = '0';
-				var b1Label = new THREE.CSS2DObject( b1Div );
-				b1Label.position.set( 100, 100, 100 );
-				geometry.add( b1Label );
+				// var b1Div = document.createElement( 'div' );
+				// b1Div.className = 'label';
+				// b1Div.textContent = 'ball 1';
+				// b1Div.style.marginTop = '0';
+				// var b1Label = new THREE.CSS2DObject( b1Div );
+				// b1Label.position.copy( 100, 100, 100 );
+				// helper.add( b1Label );
 
 				renderer = new THREE.WebGLRenderer( { antialias: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
@@ -154,11 +155,9 @@
 				var mesh = new THREE.Mesh( geometry, material );
 				mesh.position.x = ( objects.length % 5 ) * 200 - 400;
 				mesh.position.z = Math.floor( objects.length / 5 ) * 200 - 200;
-				//mesh.rotation.x = Math.random() * 200 - 100;
-				//mesh.rotation.y = Math.random() * 200 - 100;
-				//mesh.rotation.z = Math.random() * 200 - 100;
 				objects.push( mesh );
 				scene.add( mesh );
+
 			}
 
 			function onWindowResize() {

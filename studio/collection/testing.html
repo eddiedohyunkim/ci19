@@ -1,0 +1,64 @@
+<title></title>
+<body>
+<header id="header"></header>
+<script>
+
+var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/lab/classwork/09/lottery.json"
+fetch(url)
+	.then(function(response){return response.json();})
+	.then(function(json){buildPage(json);})
+
+function buildPage(data) {
+
+	console.log(data);
+
+	var counts = [];
+	for(var balls = 0; balls < 45; balls += 1){
+		for(var i = 0; i < data.length; i+= 1){
+			for (var j = 0; j < 6; j+=1){
+				var ballkey = "ball" + (j + 1);
+				if(data[i][ballkey] == balls) {
+					if(!counts[balls]) {counts[balls] = 0;}
+					counts[balls] += 1;
+				}
+			}
+		}
+	}
+	console.log(counts);
+	console.log("40 is repeated " + counts["40"] + " times");
+
+	for (var i = 0; i < data.length; i += 1){
+	
+		for (var j = 0; j < 6; j += 1){
+
+			var ballkey = "ball" + (j + 1);
+			var ball = document.createElement("div");
+			document.body.appendChild(ball);
+			ball.className = "b" + data[i][ballkey];
+			ball.innerHTML = "ball " + [j + 1] + " : " + data[i][ballkey];
+
+			ball.addEventListener( 'click', function () {
+			highlight();
+			}, false );
+
+			console.log(data[i][ballkey]);
+		}
+		
+
+		var line = document.createElement("hr");
+		document.body.appendChild(line);	
+	}
+
+	
+}
+
+
+
+function resetAllElements() {
+	var alltheEls = document.getElementsByClassName('b'); 
+	//loop thru all the els and reset their styles 
+}
+
+</script>
+</body>
+</html>
