@@ -9,6 +9,7 @@
 		margin: 0;
 		font-family: Helvetica, sans-serif;;
 		overflow: hidden;
+		color: white;
 	}
 	
 	#menu {
@@ -58,6 +59,7 @@
 	}
 </style>
 <body>
+	When onmouseover or onclick a ball, <br>show how many times the number has been repeated. <br>In which event the number has been selected. <br> What ball is this; either from ball 1 to ball 6. And in which event this ball belongs! <br>When mouseout or onclick again, all the infos are gone.
 		<script src="js/three.js"></script>
 		<script src="js/tween.min.js"></script>
 		<script src="js/TrackballControls.js"></script>
@@ -131,7 +133,7 @@ function init() {
 		camera.position.z = 2000;
 		scene = new THREE.Scene();
 
-		var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/lab/classwork/09/lottery.json"
+		var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/studio/collection/lottery.json"
 		fetch(url)
 		.then(function(response){return response.json();})
 		.then(function(json){buildPage(json);})

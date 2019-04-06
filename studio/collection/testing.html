@@ -28,6 +28,9 @@ function buildPage(data) {
 	console.log("40 is repeated " + counts["40"] + " times");
 
 	for (var i = 0; i < data.length; i += 1){
+		var event = document.createElement("div");
+		document.body.appendChild(event);
+		event.innerHTML = "event : " + [i + 1];
 	
 		for (var j = 0; j < 6; j += 1){
 
