@@ -181,7 +181,7 @@ function init() {
 		camera.position.z = 1000;
 		scene = new THREE.Scene();
 
-		var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/studio/collection/lottery100recent.json"
+		var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/studio/collection/lottery100latest.json"
 		fetch(url)
 		.then(function(response){return response.json();})
 		.then(function(json){buildPage(json);})
