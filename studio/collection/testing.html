@@ -1,67 +1,149 @@
 <title></title>
+</head>
 <body>
-<header id="header"></header>
 <script>
-
-var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/lab/classwork/09/lottery.json"
+var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/studio/collection/lottery100.json";
 fetch(url)
 	.then(function(response){return response.json();})
 	.then(function(json){buildPage(json);})
 
 function buildPage(data) {
+	console.table(data);
 
-	console.log(data);
-
-	var counts = [];
-	for(var balls = 0; balls < 45; balls += 1){
+	var count = 0;
+	var ballrepeat = [];
+	for(var balls = 0; balls < 46; balls += 1){
 		for(var i = 0; i < data.length; i+= 1){
 			for (var j = 0; j < 6; j+=1){
 				var ballkey = "ball" + (j + 1);
 				if(data[i][ballkey] == balls) {
-					if(!counts[balls]) {counts[balls] = 0;}
-					counts[balls] += 1;
+					if(!ballrepeat[balls]) {ballrepeat[balls] = 0;}
+					ballrepeat[balls] += 1;
 				}
 			}
 		}
 	}
-	console.log(counts);
-	console.log("40 is repeated " + counts["40"] + " times");
+	console.log(ballrepeat);
+	var objectify = {}
+	Object.assign(objectify, ballrepeat);
+	console.log(objectify);
+	console.log(Object.keys(objectify).length);
+	console.log(objectify[1]);
+	console.log(objectify[45]);
 
-	for (var i = 0; i < data.length; i += 1){
-		var event = document.createElement("div");
-		document.body.appendChild(event);
-		event.innerHTML = "event : " + [i + 1];
+	// ====================================================
+	// create divs according to the number of how many its repeated
+	// ====================================================
+	// for(var j = 0; j < Object.keys(objectify).length+1; j+=1){
+	// 	for(var i = 0; i < objectify[j]; i+=1){
+	// 		var repeated = document.createElement("div");
+	// 		repeated.innerHTML = j;
+	// 		document.body.appendChild(repeated);
+	// 	}
+	// }
+
 	
-		for (var j = 0; j < 6; j += 1){
 
-			var ballkey = "ball" + (j + 1);
-			var ball = document.createElement("div");
-			document.body.appendChild(ball);
-			ball.className = "b" + data[i][ballkey];
-			ball.innerHTML = "ball " + [j + 1] + " : " + data[i][ballkey];
+	// objectify.sort(function(a, b){
+	// 	if (a > b) return - 1;
+	// 	if (b > a) return 1;
+	// });
+	// console.log(objectify[0] +", "+ objectify[1]);
 
-			ball.addEventListener( 'click', function () {
-			highlight();
-			}, false );
+	// ballrepeat.sort(function(a,b){
+	// 	if (a.ballrepeat > b.ballrepeat) return - 1;
+	// 	if (b.ballrepeat > a.ballrepeat) return 1;
+	// 	return 0;
+	// });
+	// console.log(ballrepeat);
+	// console.log(ballrepeat.cities[0]);
 
-			console.log(data[i][ballkey]);
-		}
-		
+	
+	var total = document.createElement("div");
+	document.body.appendChild(total);
+	total.innerHTML = "Throughout the event " + data[0].event + " to " + data[data.length - 1].event + " — from " + data[0].date + " to " + data[data.length - 1].date;	
 
-		var line = document.createElement("hr");
-		document.body.appendChild(line);	
+
+
+	for( var k = 1; k < 46; k += 1){
+		(function(index){
+			// on off button
+			var button = document.createElement("input");
+			button.setAttribute("id","onoff" + k);
+			button.setAttribute("type","button");
+			button.setAttribute("value", k);
+			document.body.appendChild(button);
+
+			// on off button function
+			button.onclick = function onoff() {
+		  		currentvalue = document.getElementById('onoff' + index).value;
+		  		if(currentvalue ==  index){
+		  	 		document.getElementById("onoff" + index).value = "hide" + index;
+		  	 		var result = document.createElement("div");
+					result.setAttribute("id", "result" + index);
+					result.innerHTML = "number " + index + " is repeated " + ballrepeat[index] + " times.";
+					document.body.appendChild(result);
+	
+		 	 	}else{
+		   			document.getElementById("onoff" + index).value =  index;
+		   			document.getElementById("result" + index).remove();
+				}
+			}
+		})(k);
 	}
 
+
+
+var line = document.createElement("hr");
+document.body.appendChild(line);
+
+
+
+	// ball 1 - 45 
+	for( var i = 1; i < 46; i += 1){
+		var on = document.createElement("button");
+		on.setAttribute("id", "ball" + i + "show");
+		on.innerHTML = "ball " + i;
+		document.body.appendChild(on);	
+	}
+
+	// HIDE ALL
+	var off = document.createElement("button");
+	off.setAttribute("id", "ballhide");
+	off.innerHTML = "HIDE ALL";
+	document.body.appendChild(off);
+
+	// ball 1 - 45 function
+	for(var i = 1; i < 46; i += 1){
+		(function(index){  // wrap function
+
+			document.getElementById( "ball" + index + "show" ).addEventListener( 'click', function () {
+				var result = document.createElement("div");
+				result.setAttribute("class", "result" + index);
+				result.innerHTML = "number "+index+ " is repeated " + ballrepeat[index] +" times.";
+				document.body.appendChild(result);
+			}, false );
+
+		})(i); // wrap function end
 	
+		document.getElementById( "ballhide" ).addEventListener( 'click', function () { delEls(); }, false );
+	}
+
+	// HIDE ALL function
+	function delEls(){
+		for ( var x = 1; x < 46; x += 1){
+			var del = document.getElementsByClassName("result" + x); 
+			for ( var i = 0; i < del.length; i+=1 ){
+				del[i].style.display = "none";
+			}
+		}
+	}
+
+
+
+
+
 }
-
-
-
-function resetAllElements() {
-	var alltheEls = document.getElementsByClassName('b'); 
-	//loop thru all the els and reset their styles 
-}
-
 </script>
 </body>
 </html>

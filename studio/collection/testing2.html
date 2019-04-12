@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1 class="ball1">1</h1>
+<h1 class="ball1">1</h1>
+<h1 class="ball1">1</h1>
+<h1 class="ball1">1</h1>
+<h1 class="ball1">1</h1>
+
+<script>
+var one = document.getElementsByClassName("ball1");
+for (var i = 0; i < one.length; i++){
+	one.onmouseover = function() {mouseOver()};
+    one.onmouseout = function() {mouseOut()};
+}
+
+function mouseOver() {
+  var ones = document.getElementsByClassName("ball1")
+  for (var i = 0; i < ones.length; i++){
+	ones.style.color = "red";
+}
+}
+
+function mouseOut() {
+  var ones = document.getElementsByClassName("ball1")
+  for (var i = 0; i < ones.length; i++){
+	ones.style.color = "black";
+}
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+
+<body>
+    <script type="text/javascript">
+    var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/studio/collection/lottery100.json";
+    fetch(url)
+            .then(function(response){return response.json();})
+            .then(function(json){ sortData(json);})
+
+    // function sortData(json){
+    //     var cities = json.cities;
+    //     for (var i = 0; i < cities.length; i += 1){
+    //         var city = document.createElement("h1");
+    //         city.innerHTML = cities[i].city;
+    //         document.body.appendChild(city);
+    //     }
+    // }
+
+    function sortData(json){
+
+
+        console.log(json);
+
+        var pop = document.createElement("div");
+        document.body.appendChild(pop);
+
+        for (var i = 0; i < json.length; i += 1){
+            var event = document.createElement("div");
+            event.innerHTML = json[i].event;
+            event.counter = i;
+            document.body.appendChild(event);
+
+            event.onmouseover = function(event) {
+                // console.log("hi");
+                var num = event.target.counter;
+                pop.innerHTML = "ball 1 : " + json[num].ball1 + "<br>" + " ball 2 : " + json[num].ball2 + "<br>" + " ball 3 : " + json[num].ball3 + "<br>" + " ball 4 : " + json[num].ball4 + "<br>" + " ball 5 : " + json[num].ball5 + "<br>" + " ball 6 : " + json[num].ball6;
+                // city[num].style.backgroundColor = "red";
+
+                console.log(num);
+                console.log(json[event.target.counter]);
+            }
+        }
+    }
+
+</script>
+</body>
+</html>
