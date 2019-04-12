@@ -181,13 +181,13 @@ function init() {
 		camera.position.z = 1000;
 		scene = new THREE.Scene();
 
-		var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/studio/collection/lottery100.json"
+		var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/studio/collection/lottery100recent.json"
 		fetch(url)
 		.then(function(response){return response.json();})
 		.then(function(json){buildPage(json);})
 
 		function buildPage(data) {
-			// console.log(data);
+			console.table(data);
 			// console.log(targets);
 			// 10 x 5
 			for ( var i = 0; i < data.length; i += 1) {
