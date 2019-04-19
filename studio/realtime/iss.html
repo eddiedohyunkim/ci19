@@ -1,0 +1,117 @@
+<html>
+<title>ISS</title>
+<body>
+<script>
+var x = document.createElement("div");
+var button = document.createElement("button");
+button.innerHTML = "Is it right?"
+var line = document.createElement("hr");
+
+function getLocation() {
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(showPosition);
+
+	} else { 
+		x.innerHTML = "Geolocation is not supported by this browser.";
+	}
+}
+getLocation();
+
+function showPosition(position) {
+	console.log(position);
+	x.innerHTML = " <b>Your coordinates</b><br>Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude + "<br>";
+	x.setAttribute("id", "userloc");
+
+ 	button.setAttribute("onclick", "window.open('https://www.google.com/search?q=" + position.coords.latitude + ',%20' + position.coords.longitude + "')" );
+ 	button.setAttribute("target", "_");
+ 	document.getElementById("userloc").appendChild(button);
+}
+document.body.appendChild(x);
+document.body.appendChild(line);
+
+function catchError(positionError) {
+	switch(positionError.code){
+	case positionError.TIMEOUT:
+		alert("The request to get user location has aborted as it has taken too long.");
+		break;
+	case positionError.POSITION_UNAVAILABLE:
+		alert("Location information is not available.");
+		break;
+	case positionError.PERMISSION_DENIED:
+		alert("Permission to share location information has been denied!");
+		break;
+	default:
+		alert("An unknown error occurred.");
+	}
+}
+
+// do not touch
+var iss = document.createElement("div");
+var issAlt = document.createElement("div");
+var issLat = document.createElement("div");
+var issLon = document.createElement("div");
+iss.setAttribute("id", "iss");
+issAlt.setAttribute("id", "issalt");
+issLat.setAttribute("id", "isslat");
+issLon.setAttribute("id", "isslon");
+iss.innerHTML = "<b>ISS coordinates</b>";
+issAlt.innerHTML = "Altitude: ";
+issLat.innerHTML = "Latitude: ";
+issLon.innerHTML = "Longitude: ";
+document.body.appendChild(iss);
+document.body.appendChild(issAlt);
+document.body.appendChild(issLat);
+document.body.appendChild(issLon);
+
+setInterval(function(){
+	// maybe update other things too
+	const removeElements = (elms) => elms.forEach(el => el.remove());
+	removeElements( document.querySelectorAll(".issresult") );
+	updateISS();
+}, 3000);
+
+function updateISS() {
+	// wheretheiss.at
+	var url = "https://api.wheretheiss.at/v1/satellites/25544"
+	fetch(url)
+		.then(function(response){return response.json();})
+		.then(function(json){wheretheiss(json);})
+	function wheretheiss(data) {
+		var issAltResult = document.createElement("span");
+		var issLatResult = document.createElement("span");
+		var issLonResult = document.createElement("span");
+		issAltResult.setAttribute("class", "issresult");
+		issLatResult.setAttribute("class", "issresult");
+		issLonResult.setAttribute("class", "issresult");
+		issAltResult.innerHTML = data.altitude;
+		issLatResult.innerHTML = data.latitude;
+		issLonResult.innerHTML = data.longitude;
+		document.getElementById("issalt").appendChild(issAltResult);
+		document.getElementById("isslat").appendChild(issLatResult);
+		document.getElementById("isslon").appendChild(issLonResult);
+	}
+}
+updateISS();
+
+
+
+
+// N2YO
+// var url = "https://www.n2yo.com/rest/v1/satellite/positions/25544/41.702/-76.014/0/2/&apiKey=T9UGNG-T7NV6L-PFQ4R2-3ZHU"
+// fetch(url)
+// 	.then(function(response){return response.json();})
+// 	.then(function(json){n2yo(json);})
+// function n2yo(data) {
+// 	console.log(data.info);
+// 	console.log(data.positions);
+// 	var n2yo_pos = document.createElement("div");
+// 	n2yo_pos.innerHTML = 
+// 		"ISS coordinates (N2YO)<br>Altitude: " + data.positions[0].sataltitude + 
+//   		"<br>Latitude: " + data.positions[0].satlatitude + 
+//   		"<br>Longitude: " + data.positions[0].satlongitude + "<hr>";
+//   	document.body.appendChild(n2yo_pos);
+// }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<html>
+	<title>forest</title>
+<body>
+<script>
+
+setInterval(function(){
+ window.location.reload(1);
+}, 2000);
+
+	for(var i = 0; i < 1000; i+=1){
+	var warning = document.createElement("img");
+	warning.setAttribute("src", "img/tree" + Math.floor(Math.random()*13+1) +".png");
+	warning.setAttribute("width", "200px");
+	var h = window.innerHeight;
+	var w = window.innerWidth;
+	warning.setAttribute("style", "position: absolute; top:" + (Math.random()* h )/ 1.5 + ";" + "left:" + (Math.random()* w) / 1.2 + ";");
+	document.body.appendChild(warning);	
+	}
+</script>
+</body>
+</html>
