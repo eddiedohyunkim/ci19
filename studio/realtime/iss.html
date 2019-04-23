@@ -1,5 +1,5 @@
 <html>
-<title>ISS</title>
+<title>satellites</title>
 <body>
 <script>
 var x = document.createElement("div");
@@ -25,6 +25,7 @@ function showPosition(position) {
  	button.setAttribute("onclick", "window.open('https://www.google.com/search?q=" + position.coords.latitude + ',%20' + position.coords.longitude + "')" );
  	button.setAttribute("target", "_");
  	document.getElementById("userloc").appendChild(button);
+
 }
 document.body.appendChild(x);
 document.body.appendChild(line);
@@ -68,24 +69,25 @@ setInterval(function(){
 	const removeElements = (elms) => elms.forEach(el => el.remove());
 	removeElements( document.querySelectorAll(".issresult") );
 	updateISS();
-}, 3000);
+}, 10000);
 
 function updateISS() {
 	// wheretheiss.at
-	var url = "https://api.wheretheiss.at/v1/satellites/25544"
+	var url = "https://www.n2yo.com/rest/v1/satellite/positions/25544/0.000/0.000/0/2/&apiKey=T9UGNG-T7NV6L-PFQ4R2-3ZHU"
 	fetch(url)
 		.then(function(response){return response.json();})
 		.then(function(json){wheretheiss(json);})
 	function wheretheiss(data) {
+		console.log(data);
 		var issAltResult = document.createElement("span");
 		var issLatResult = document.createElement("span");
 		var issLonResult = document.createElement("span");
 		issAltResult.setAttribute("class", "issresult");
 		issLatResult.setAttribute("class", "issresult");
 		issLonResult.setAttribute("class", "issresult");
-		issAltResult.innerHTML = data.altitude;
-		issLatResult.innerHTML = data.latitude;
-		issLonResult.innerHTML = data.longitude;
+		issAltResult.innerHTML =data.positions[0].sataltitude + " km";
+		issLatResult.innerHTML = data.positions[0].satlatitude;
+		issLonResult.innerHTML = data.positions[0].satlongitude;
 		document.getElementById("issalt").appendChild(issAltResult);
 		document.getElementById("isslat").appendChild(issLatResult);
 		document.getElementById("isslon").appendChild(issLonResult);
@@ -93,24 +95,6 @@ function updateISS() {
 }
 updateISS();
 
-
-
-
-// N2YO
-// var url = "https://www.n2yo.com/rest/v1/satellite/positions/25544/41.702/-76.014/0/2/&apiKey=T9UGNG-T7NV6L-PFQ4R2-3ZHU"
-// fetch(url)
-// 	.then(function(response){return response.json();})
-// 	.then(function(json){n2yo(json);})
-// function n2yo(data) {
-// 	console.log(data.info);
-// 	console.log(data.positions);
-// 	var n2yo_pos = document.createElement("div");
-// 	n2yo_pos.innerHTML = 
-// 		"ISS coordinates (N2YO)<br>Altitude: " + data.positions[0].sataltitude + 
-//   		"<br>Latitude: " + data.positions[0].satlatitude + 
-//   		"<br>Longitude: " + data.positions[0].satlongitude + "<hr>";
-//   	document.body.appendChild(n2yo_pos);
-// }
 
 </script>
 </body>
