@@ -1,7 +1,12 @@
 function tplawesome(e,t){res=e;for(var n=0;n<t.length;n++){res=res.replace(/\{\{(.*?)\}\}/g,function(e,r){return t[n][r]})}return res}
 
 function initAPI() {
-    gapi.client.setApiKey("AIzaSyBW5E9Z4rga5yonNAXYJ39EDxGAbB0kYb0");
+	// 1 - AIzaSyDgYuyIubjyUh9Job9tMvkOawGRmncPdNM
+	// 2 - AIzaSyCyV9GLxOZCKhsZilywu0ucXqWRk1LZGlg
+	// 3 - AIzaSyCa8oahtV-IzePgYb2_pOrtAABmSFZalyY
+	// 4 - AIzaSyDoELYDT8j1uU6HoxVmYRzvSk5g5BoRxqw
+	// 5 - AIzaSyB2NvZ8j8MtiNoXL8V7tzz9FALwWfWesbI
+    gapi.client.setApiKey("AIzaSyDgYuyIubjyUh9Job9tMvkOawGRmncPdNM");
     gapi.client.load("youtube", "v3", function() {
         // youtube api is ready
     });
@@ -21,14 +26,14 @@ function apiRequest() {
 	   type: "video",
 	   q: encodeURIComponent(search).replace(/%20/g, "+"),
 	   maxResults: 1,
-	   order: "date"
+	   order: "relevance"
 	}); 
 	
 	// execute the request
 	request.execute(function(response) {
-	console.log(response);
-	var results = response.result;
-	//$("#results").html("");
+		console.log(response);
+		var results = response.result;
+		//$("#results").html("");
 	 	$.each(results.items, function(index, item) {
 			$.get("tpl/item.html", function(data) {
 				$("#results").append(tplawesome(data, [{"videoid":item.id.videoId}]));
@@ -38,32 +43,20 @@ function apiRequest() {
 
 }
 
+var text = "";
 
 
 function updateWords(str) {
 	var words = str.trim().replace(/\s+/g, " ").split(" ");
 	var wordCount = words.length;
-     $("#wordCount").html(wordCount);
+	var empty = "";
+     $("#placeholder").html(empty);
 	console.log(words);
- 
+
 }
 
-// button 
-//function onoff(){
-//
-//	var textarea = document.getElementById("container");
-//
-//	button = document.getElementById("onoff").value;
-// 	if(button == "show text"){
-// 		document.getElementById("onoff").value="hide text";
-// 		textarea.style.display = "block";
-// 	}else{
-// 		document.getElementById("onoff").value="show text";
-// 		textarea.style.display = "none";
-// 	}
-//}
 
-var text = "";
+
 
 $(document).ready(function() {
 
@@ -217,7 +210,7 @@ function deleteElement() {
 	$(".inner").last().remove();
 	text = text.slice(0, -1);
 	updateWords(text);
-	//apiRequest(); 
+	apiRequest(); 
 
 
 }

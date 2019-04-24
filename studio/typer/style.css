@@ -1,5 +1,5 @@
 html, body{
-	margin: 0;
+	margin: 10px;
 	font-size: 50px;	
 	line-height: 1em;
 }
@@ -16,9 +16,11 @@ header{
 
 
 #container {
-	width: 100vw;	
+	width: 100vw;
+	margin: 10px 0 0 10px;	
 	word-wrap: break-word;
-	margin: 0 0 0 15px;
+
+
 
 }
 #results{
@@ -26,9 +28,3 @@ header{
 	flex-wrap: wrap;
 }
 
-#result {
-	position: absolute;
-	bottom: 5px;
-	font-size: 25px;
-	margin: 0 0 0 15px;
-}
