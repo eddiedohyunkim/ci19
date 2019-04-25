@@ -65,7 +65,15 @@ function typer(data) {
 		// lastInner.style.color = "transparent";
 		lastInner.style.textShadow = txtShadow;
 		}
+		// option 1 
+		// var scrollingElement = (document.scrollingElement || document.body);
+		// scrollingElement.scrollTop = scrollingElement.scrollHeight;
+
+		// option 2 
+		document.body.scrollIntoView(false);
 		
+		// option 3 
+		// window.scrollTo(0,document.body.scrollHeight);
 	}
 	$(document).ready(function() {
 	 	$(document).on("keypress", function(a) {
