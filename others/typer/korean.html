@@ -1,0 +1,185 @@
+<html>
+<title>Korean fonts</title>
+<style>
+	body{
+		margin: 10px;
+		font-size: 100px;	
+		line-height: 1em;
+		overflow: auto;
+	}
+	#cursor {
+		animation: blinker 1s step-end infinite; 
+		font-family: Times New Roman;
+	}
+	@keyframes blinker {  
+		50% { opacity: 0; }
+	}
+	#container {
+		width: 100%;
+		margin: 10px;	
+		word-wrap: break-word;
+	}
+</style>
+<body>
+<div id="container">
+<span id="cursor">|</span>
+</div>
+<script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+<script>
+	var korean = [
+	"Black+Han+Sans:400",
+	"Gothic+A1:100",
+	"Nanum+Gothic:400",
+	"Nanum+Gothic+Coding:400",
+	"Nanum+Myeongjo:400",
+	"Song+Myung:400",
+	"Gamja+Flower:400",
+	"Gaegu:300",
+	"Gugi:400",
+	"Cute+Font:400",
+	"Kirang+Haerang:400",
+	"Nanum+Brush+Script:400",
+	"Nanum+Pen+Script:400",
+	"East+Sea+Dokdo:400",
+	"Do+Hyeon:400",
+	"Dokdo:400",
+	"Poor+Story:400",
+	"Stylish:400",
+	"Yeon+Sung:400",
+	"Jua:400",
+	"Hi+Melody:400",
+	"Sunflower:500",
+	"Black+And+White+Picture:400"
+	]
+	function fontupdate(){
+		var font = korean[ Math.floor(Math.random()*korean.length) ];
+		var fontLink = document.createElement("link");
+		fontLink.setAttribute("rel", "stylesheet");
+		fontLink.setAttribute("href", "https://fonts.googleapis.com/css?family=" + font);
+		document.head.appendChild(fontLink);
+
+		var allInner = document.querySelectorAll(".inner");
+		var lastInner = allInner[allInner.length-1];
+		lastInner.style.fontFamily = font ;
+		lastInner.style.color = "red";
+		console.log(lastInner);
+	}
+	$(document).ready(function() {
+	 	$(document).on("keypress", function(a) {
+	 		a.preventDefault();
+	    	var char = String.fromCharCode(a.which);
+	    	createElement(char);
+	    	fontupdate();
+		});
+		$(document).on("keydown", function(b) {
+	    	if (b.which == 8){
+				b.preventDefault();
+				deleteElement();
+	    	}
+	   		if (b.which == 13){
+	    	 	b.preventDefault();
+	 			linebreakElement(); 
+			}
+		}); 
+	});
+
+function createElement(c) {
+var elem = $("#cursor");
+	if (c == "a") { elem.before('<span class="inner">ㅁ</span>'); }
+	if (c == "b") { elem.before('<span class="inner">ㅠ</span>'); }
+	if (c == "c") { elem.before('<span class="inner">ㅊ</span>'); }
+	if (c == "d") { elem.before('<span class="inner">ㅇ</span>'); }
+	if (c == "e") { elem.before('<span class="inner">ㄷ</span>'); }
+	if (c == "f") { elem.before('<span class="inner">ㄹ</span>'); }
+	if (c == "g") { elem.before('<span class="inner">ㅎ</span>'); }
+	if (c == "h") { elem.before('<span class="inner">ㅗ</span>'); }
+	if (c == "i") { elem.before('<span class="inner">ㅑ</span>'); }
+	if (c == "j") { elem.before('<span class="inner">ㅓ</span>'); }
+	if (c == "k") { elem.before('<span class="inner">ㅏ</span>'); }
+	if (c == "l") { elem.before('<span class="inner">ㅣ</span>'); }
+	if (c == "m") { elem.before('<span class="inner">ㅡ</span>'); }
+	if (c == "n") { elem.before('<span class="inner">ㅜ</span>'); }
+	if (c == "o") { elem.before('<span class="inner">ㅐ</span>'); }
+	if (c == "p") { elem.before('<span class="inner">ㅔ</span>'); }
+	if (c == "q") { elem.before('<span class="inner">ㅂ</span>'); }
+	if (c == "r") { elem.before('<span class="inner">ㄱ</span>'); }
+	if (c == "s") { elem.before('<span class="inner">ㄴ</span>'); }
+	if (c == "t") { elem.before('<span class="inner">ㅅ</span>'); }
+	if (c == "u") { elem.before('<span class="inner">ㅕ</span>'); }
+	if (c == "v") { elem.before('<span class="inner">ㅍ</span>'); }
+	if (c == "w") { elem.before('<span class="inner">ㅈ</span>'); }
+	if (c == "x") { elem.before('<span class="inner">ㅌ</span>'); }
+	if (c == "y") { elem.before('<span class="inner">ㅛ</span>'); }
+	if (c == "z") { elem.before('<span class="inner">ㅋ</span>'); }
+
+	if (c == "Q") { elem.before('<span class="inner">ㅃ</span>'); }
+	if (c == "W") { elem.before('<span class="inner">ㅉ</span>'); }
+	if (c == "E") { elem.before('<span class="inner">ㄸ</span>'); }
+	if (c == "R") { elem.before('<span class="inner">ㄲ</span>'); }
+	if (c == "T") { elem.before('<span class="inner">ㅆ</span>'); }
+	if (c == "O") { elem.before('<span class="inner">ㅒ</span>'); }
+	if (c == "P") { elem.before('<span class="inner">ㅖ</span>'); }
+
+	if (c == "1") { elem.before('<span class="inner">1</span>'); }
+	if (c == "2") { elem.before('<span class="inner">2</span>'); }
+	if (c == "3") { elem.before('<span class="inner">3</span>'); }
+	if (c == "4") { elem.before('<span class="inner">4</span>'); }
+	if (c == "5") { elem.before('<span class="inner">5</span>'); }
+	if (c == "6") { elem.before('<span class="inner">6</span>'); }
+	if (c == "7") { elem.before('<span class="inner">7</span>'); }
+	if (c == "8") { elem.before('<span class="inner">8</span>'); }
+	if (c == "9") { elem.before('<span class="inner">9</span>'); }
+	if (c == "0") { elem.before('<span class="inner">0</span>'); }
+
+	if (c == "[") { elem.before('<span class="inner">[</span>'); }
+	if (c == "{") { elem.before('<span class="inner">{</span>'); }
+	if (c == "`") { elem.before('<span class="inner">`</span>'); }
+	if (c == "~") { elem.before('<span class="inner">~</span>'); }
+	if (c == "!") { elem.before('<span class="inner">!</span>'); }
+	if (c == "@") { elem.before('<span class="inner">@</span>'); }
+	if (c == "#") { elem.before('<span class="inner">#</span>'); }
+	if (c == "$") { elem.before('<span class="inner">$</span>'); }
+	if (c == "%") { elem.before('<span class="inner">%</span>'); }
+	if (c == "^") { elem.before('<span class="inner">^</span>'); }
+	if (c == "&") { elem.before('<span class="inner">&</span>'); }
+	if (c == "*") { elem.before('<span class="inner">*</span>'); }
+	if (c == "(") { elem.before('<span class="inner">(</span>'); }
+	if (c == ")") { elem.before('<span class="inner">)</span>'); }
+	if (c == "-") { elem.before('<span class="inner">-</span>'); }
+	if (c == "=") { elem.before('<span class="inner">=</span>'); }
+	if (c == "_") { elem.before('<span class="inner">_</span>'); }
+	if (c == "+") { elem.before('<span class="inner">+</span>'); }
+	if (c == "[") { elem.before('<span class="inner">[</span>'); }
+	if (c == "{") { elem.before('<span class="inner">{</span>'); }
+	if (c == "]") { elem.before('<span class="inner">]</span>'); }
+	if (c == "}") { elem.before('<span class="inner">}</span>'); }
+	if (c == ";") { elem.before('<span class="inner">;</span>'); }
+	if (c == ":") { elem.before('<span class="inner">:</span>'); }
+	if (c == "{") { elem.before('<span class="inner">{</span>'); }
+	if (c == "<") { elem.before('<span class="inner"><</span>'); }
+	if (c == ">") { elem.before('<span class="inner">></span>'); }
+	if (c == "{") { elem.before('<span class="inner">{</span>'); }
+	if (c == ",") { elem.before('<span class="inner">,</span>'); }
+	if (c == ".") { elem.before('<span class="inner">.</span>'); }
+	if (c == "/") { elem.before('<span class="inner">/</span>'); }
+	if (c == "?") { elem.before('<span class="inner">?</span>'); }
+	if (c == '"') { elem.before('<span class="inner">"</span>'); }
+	if (c == "'") { elem.before("<span class='inner'>'</span>"); }
+	if (c == " ") { elem.before('<span class="inner">&nbsp;</span>');}
+};
+
+function deleteElement() {
+	$(".inner").last().remove();
+}
+
+function linebreakElement() {
+	var elem = $('#cursor');
+	$(".inner").after().last().append('</br>');
+}
+
+
+
+</script>
+
+</body>
+</html>
