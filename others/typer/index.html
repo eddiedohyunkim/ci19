@@ -24,6 +24,7 @@
 	}
 </style>
 <body>
+<div id="trigger"></div>
 <div id="container">
 <span id="cursor">|</span>
 </div>
@@ -35,6 +36,19 @@ fetch(url)
 	.then(function(json){typer(json);})
 function typer(data) {
 	console.log(data);
+		var button = document.createElement("input");
+		button.setAttribute("id","onoff");
+		button.setAttribute("type","button");
+		button.setAttribute("value", "effect!");
+		document.getElementById("trigger").appendChild(button);
+		button.onclick = function onoff() {
+		  	currentvalue = document.getElementById('onoff').value;
+		  	if(currentvalue ==  "effect!"){
+		   		document.getElementById("onoff").value = "regular";
+		  	}else{
+		   		document.getElementById("onoff").value = "effect!";
+			}
+		}
 	function fontupdate(){
 		var font = data.items[ Math.floor(Math.random()*data.items.length) ];
 		var fontLink = document.createElement("link");
@@ -46,6 +60,12 @@ function typer(data) {
 		var lastInner = allInner[allInner.length-1];
 		lastInner.style.fontFamily = font.family +", " + font.category ;
 		// console.log(lastInner);
+		if (document.getElementById("onoff").value == "regular"){
+		var txtShadow = Math.round(Math.random()*10)+"px "+Math.round(Math.random()*10)+"px "+Math.round(Math.random()*10)+"px "+"rgb("+Math.round(Math.random()*255)+", "+Math.round(Math.random()*255)+", "+Math.round(Math.random()*255)+")";
+		// lastInner.style.color = "transparent";
+		lastInner.style.textShadow = txtShadow;
+		}
+		
 	}
 	$(document).ready(function() {
 	 	$(document).on("keypress", function(a) {
