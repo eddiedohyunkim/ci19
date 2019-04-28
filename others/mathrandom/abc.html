@@ -1,0 +1,119 @@
+<html>
+	<title></title>
+
+<body onLoad="onbodyload()">
+	<div id="result"></div>
+	<hr>
+	<div id="colors" style = "display: flex; flex-wrap: wrap; font-size: 2px;"></div>
+	<hr>
+	<div id="finalcount"></div>
+<script>
+
+	var random = document.getElementById("result");
+	var line = document.createElement("hr");
+var count = 0;
+var interval = setInterval(function(){
+    count += 1;
+	const removeElements = (elms) => elms.forEach(el => el.remove());
+	removeElements( document.querySelectorAll("span") );
+	update();
+	onbodyload();
+	if(count === 5000){
+    	clearInterval(interval);
+    	results();
+	}
+}, 1);
+
+function update(){
+	random.innerHTML = Math.floor(Math.random()*2)+""+Math.floor(Math.random()*2)+""+Math.floor(Math.random()*2);	
+}
+function onbodyload(){
+	var aaa = document.createElement("div");
+	aaa.innerHTML = "000"
+	aaa.style.backgroundColor = "#000000";
+	aaa.setAttribute("class", "aaa")
+	if( random.innerHTML==="000"){
+		document.getElementById("colors").appendChild(aaa);
+	}
+	var aab = document.createElement("div");
+	aab.innerHTML = "001"
+	aab.style.backgroundColor = "#0000ff";
+	aab.setAttribute("class", "aab")
+	if( random.innerHTML==="001"){
+		document.getElementById("colors").appendChild(aab);
+	}
+	var aba = document.createElement("div");
+	aba.innerHTML = "010"
+	aba.style.backgroundColor = "#00ff00";
+	aba.setAttribute("class", "aba")
+	if( random.innerHTML==="010"){
+		document.getElementById("colors").appendChild(aba);
+	}
+	var abb = document.createElement("div");
+	abb.innerHTML = "011"
+	abb.style.backgroundColor = "#00ffff";
+	abb.setAttribute("class", "abb")
+	if( random.innerHTML==="011"){
+		document.getElementById("colors").appendChild(abb);
+	}
+	var baa = document.createElement("div");
+	baa.innerHTML = "100"
+	baa.style.backgroundColor = "#ff0000";
+	baa.setAttribute("class", "baa")
+	if( random.innerHTML==="100"){
+		document.getElementById("colors").appendChild(baa);
+	}
+	var bab = document.createElement("div");
+	bab.innerHTML = "101"
+	bab.style.backgroundColor = "#ff00ff";
+	bab.setAttribute("class", "bab")
+	if( random.innerHTML==="101"){
+		document.getElementById("colors").appendChild(bab);
+	}
+	var bba = document.createElement("div");
+	bba.innerHTML = "110"
+	bba.style.backgroundColor = "#ffff00";
+	bba.setAttribute("class", "bba")
+	if( random.innerHTML==="110"){
+		document.getElementById("colors").appendChild(bba);
+	}
+	var bbb = document.createElement("div");
+	bbb.innerHTML = "111"
+	bbb.style.backgroundColor = "#ffffff";
+	bbb.setAttribute("class", "bbb")
+	if( random.innerHTML==="111"){
+		document.getElementById("colors").appendChild(bbb);
+	}
+}
+
+function results(){
+	var final = document.getElementById("finalcount");
+	var countaaa = document.getElementsByClassName("aaa");
+	var countaab = document.getElementsByClassName("aab");
+	var countaba = document.getElementsByClassName("aba");
+	var countabb = document.getElementsByClassName("abb");
+	var countbaa = document.getElementsByClassName("baa");
+	var countbab = document.getElementsByClassName("bab");
+	var countbba = document.getElementsByClassName("bba");
+	var countbbb = document.getElementsByClassName("bbb");
+
+
+	final.innerHTML = "000: "+countaaa.length+"<br>001: "+countaab.length+"<br>010: "+countaba.length+"<br>011: "+countabb.length+"<br>100: "+countbaa.length+"<br>101: "+countbab.length+"<br>110: "+countbba.length+"<br>111: "+countbbb.length;
+}
+
+
+
+//000	a
+//001	b
+//010	c
+//011	d
+//100	e
+//101	f
+//110	g
+//111	h
+
+
+
+</script>
+</body>
+</html>

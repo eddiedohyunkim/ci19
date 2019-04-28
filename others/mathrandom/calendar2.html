@@ -1,0 +1,87 @@
+<html>
+	<title>calendar</title>
+<style>
+html, body{height: 100%;}
+body{
+	margin: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+div{font-size: 30vmin;}
+#trigger{
+	position:fixed;
+	top:0px;
+	left:0px;
+}
+</style>
+<body>
+	<div id="trigger"></div>
+	<div id="time"></div>
+<script>
+var url = "https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDpMWnuzdI4HjGEeT1G8fXvpQOr986ydrg"
+fetch(url)
+	.then(function(response){return response.json();})
+	.then(function(json){typer(json);})
+function typer(data) {
+
+	var button = document.createElement("input");
+	button.setAttribute("id","onoff");
+	button.setAttribute("type","button");
+	button.setAttribute("value", "effect!");
+	document.getElementById("trigger").appendChild(button);
+	button.onclick = function onoff() {
+	  	currentvalue = document.getElementById('onoff').value;
+	  	if(currentvalue ==  "effect!"){
+	   		document.getElementById("onoff").value = "regular";
+	  	}else{
+	   		document.getElementById("onoff").value = "effect!";
+		}
+	}
+
+	setInterval(function(){
+	const removeElements = (elms) => elms.forEach(el => el.remove());
+	removeElements(document.querySelectorAll("span"));
+	time();
+	}, 1000);
+	
+	function time(){
+		var now = new Date();
+		var hour = document.createElement("span");
+		var min = document.createElement("span");
+		var sec = document.createElement("span");
+		var hm = document.createElement("span");
+		var ms = document.createElement("span");
+		hour.innerHTML = now.getHours();
+		min.innerHTML = now.getMinutes();
+		sec.innerHTML = now.getSeconds();
+		hm.innerHTML = ":";
+		ms.innerHTML = ":";
+		document.getElementById("time").appendChild(hour);
+		document.getElementById("time").appendChild(hm);
+		document.getElementById("time").appendChild(min);
+		document.getElementById("time").appendChild(ms);
+		document.getElementById("time").appendChild(sec);	
+
+		for(var i = 0; i<5; i+=1){
+			var font = data.items[ Math.floor(Math.random()*data.items.length) ];
+			var fontLink = document.createElement("link");
+			fontLink.setAttribute("rel", "stylesheet");
+			fontLink.setAttribute("href", "https://fonts.googleapis.com/css?family=" + font.family);
+			document.head.appendChild(fontLink);
+			var all = document.querySelectorAll("span");
+			let ind = all[i];
+			ind.style.fontFamily = font.family +", " + font.category;
+			if (document.getElementById("onoff").value == "regular"){
+				var txtShadow = Math.round(Math.random()*10)+"px "+Math.round(Math.random()*10)+"px "+Math.round(Math.random()*10)+"px "+"rgb("+Math.round(Math.random()*255)+", "+Math.round(Math.random()*255)+", "+Math.round(Math.random()*255)+")";
+				ind.style.textShadow = txtShadow;
+			}
+		}
+	}
+	time();
+
+}		
+</script>
+</body>
+</html>
+
