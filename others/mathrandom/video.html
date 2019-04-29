@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>calendar</title>
+</head>
+<style>
+	body{
+		display: flex;
+	}
+</style>
+<body>
+<video id="vid1"autoplay></video>
+<video id="vid2"autoplay></video>
+<img src="">
+<canvas style="display:block;"></canvas>
+
+<script>
+const constraints = {
+  video: true
+};
+
+const vid1 = document.getElementById("vid1");
+
+
+navigator.mediaDevices.getUserMedia(constraints).
+  then((stream) => {vid1.srcObject = stream});
+</script>
+</body>
+</html>
