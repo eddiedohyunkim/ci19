@@ -13,6 +13,10 @@
 //    Zoom - middle mouse, or mousewheel / touch: two-finger spread or squish
 //    Pan - right mouse, or left mouse + ctrl/meta/shiftKey, or arrow keys / touch: two-finger move
 
+
+
+// EDDIE KIM CHECK LINE 809 PREVENT DEFAULT
+
 THREE.OrbitControls = function ( object, domElement ) {
 
 	this.object = object;
@@ -806,7 +810,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 
 		if ( scope.enabled === false || scope.enableZoom === false || ( state !== STATE.NONE && state !== STATE.ROTATE ) ) return;
 
-		event.preventDefault();
+		// event.preventDefault();
 		event.stopPropagation();
 
 		scope.dispatchEvent( startEvent );

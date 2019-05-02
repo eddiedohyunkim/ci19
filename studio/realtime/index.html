@@ -1,140 +1,347 @@
 <html>
-	<title>satellites</title>
-	<style>
-		body {
-			background-color: #fff;
-			margin: 0;
-			overflow: hidden;
+<head>
+<title>satellite</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<style>
+	body {
+		color: #00000;
+		font-family: helvetica;
+		background-color: #f0f0f0;
+		margin: 0;
+		overflow: hidden;
+	}
+	#info {
+		position: absolute;
+		top: 15px;
+		width: 100%;
+		text-align: center;
+		font-size: 0.8vw;
+	}
+	#lefttop{
+		position: absolute;
+		top: 15px;
+		left: 15px;
+		width: 200px;
+		font-size: 0.8vw;
+	}
+	#righttop{
+		position: absolute;
+		top: 15px;
+		right: 15px;
+		font-size: 0.8vw;
+	}
+	.label{
+		font-size: 10px;
+		color: #404040;
+	}
+</style>
+</head>
+<body>
+	<div id="container"></div>
+	<div id="info">ISS Vector Drawing</div>
+	<div id="lefttop"></div>
+	<div id="righttop"></div>
+
+	<script src="js/three.js"></script>
+	<script src="js/OrbitControls.js"></script>
+	<script src="js/CSS2DRenderer.js"></script>
+<script>
+	// geolocation api here
+	var container;
+	var d = 1000;
+	var f = d/2;
+	var flat = (f/90);
+	var flon = (f/180);
+	var falt = 1;
+	var userlat = 40.7219;
+	var userlon = -74.0343;
+	var camera, scene, renderer, labelRenderer;
+	var splineHelperObjects = [];
+	var splinePointsLength = 15;
+	var positions = [];
+	var point = new THREE.Vector3();
+	var geometry = new THREE.BoxBufferGeometry( 20,10,10 );
+	var transformControl;
+	var ARC_SEGMENTS = 5000;
+	var splines = {};
+	var params = {
+		uniform: true,
+		centripetal: true,
+		chordal: true,
+	};
+
+	init();
+	animate();
+	function init() {	
+		container = document.getElementById("container");
+		scene = new THREE.Scene();
+		scene.position.set(0,-200,0);
+		scene.background = new THREE.Color(0xf0f0f0);
+		camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+		camera.position.set(d-200, 300, d-200);
+		// camera.position.set(0, 500, 1000);
+		scene.add( camera );
+		
+		// light
+		scene.add( new THREE.AmbientLight(0xf0f0f0));
+		var light = new THREE.SpotLight(0xffffff, 1.5);
+		light.position.set(0, 1500, 0);
+		light.castShadow = true;
+		light.shadow = new THREE.LightShadow( new THREE.PerspectiveCamera(70, 1, 200, 2000));
+		light.shadow.bias = - 0.000222;
+		light.shadow.mapSize.width = 1024;
+		light.shadow.mapSize.height = 1024;
+		scene.add( light );
+
+		var planeGeometry = new THREE.PlaneBufferGeometry( 1500, 1500 );
+		planeGeometry.rotateX( - Math.PI / 2 );
+		var planeMaterial = new THREE.ShadowMaterial( { opacity: 0.2 } );
+		var plane = new THREE.Mesh( planeGeometry, planeMaterial );
+		plane.receiveShadow = true;
+		scene.add( plane );
+		var helper = new THREE.GridHelper( 1500, 100, 0xff88ff, 0xd0d0d0);
+		scene.add( helper );
+
+			var axes = new THREE.AxesHelper( d );
+			axes.position.set( -500, 0, -500 );
+			scene.add(axes);
+
+		renderer = new THREE.WebGLRenderer( { antialias: true } );
+		renderer.setPixelRatio( window.devicePixelRatio );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		renderer.shadowMap.enabled = true;
+		container.appendChild( renderer.domElement );
+
+		labelRenderer = new THREE.CSS2DRenderer();
+		labelRenderer.setSize( window.innerWidth, window.innerHeight );
+		labelRenderer.domElement.style.position = 'absolute';
+		labelRenderer.domElement.style.top = 0;
+		container.appendChild( labelRenderer.domElement );
+
+		var controls = new THREE.OrbitControls( camera );
+		controls.damping = 0.2;
+
+
+
+		var ylw = "#ff0000";
+		var g = "#808080";
+		var dg = "#808080";
+		var lfs = "10px";
+		var labels = [ ["You",userlat*flat,30,userlon*flon,"#ff00ff",lfs],["N",f,0,0,ylw,lfs],["S",-f,0,0,ylw,lfs],["E",0,0,-f,ylw,lfs],["W",0,0,f,ylw,lfs],["Latitude",-f,0,f+80,g,lfs],["Longitude",f+80,0,-f,g,lfs], ["Altitude (km)",-f, d+50, -f,g,lfs] ]
+		for(var i = 0; i<labels.length; i+=1){
+			var lbl = document.createElement("div");
+			var label = labels[i];
+			lbl.style.fontSize = label[5];
+			lbl.className = "label";
+			lbl.style.color = label[4];
+			lbl.textContent = label[0];
+			var lbldiv = new THREE.CSS2DObject(lbl);
+			lbldiv.position.set(label[1],label[2],label[3]);
+			scene.add(lbldiv);
 		}
-		#info {
-			position: absolute;
-			top:10px ;
-			width: 100%;
-			color: #FFF;
-			font-family: helvetica;
-			text-align: center;
+
+		//altitude
+		for(var i = 400; i<440+1; i+=20){
+			var altDiv = document.createElement("div");
+			altDiv.className = "label";
+			altDiv.textContent = i;
+			var altlabel = new THREE.CSS2DObject(altDiv);
+			altlabel.position.set(-f, (i/400)*10*d-10*d, -f);
+			scene.add(altlabel);
 		}
-		.label{
-			color: #FFF;
-			font-family: sans-serif;
-			padding: 2px;
-			background: rgba( 0, 0, 0, .6 );
+		//latitude
+		for(var i = 0; i<180+1; i+=180/4){
+			var londiv = document.createElement("div");
+			londiv.className = "label";
+			londiv.textContent = -90+i;
+			var lonlabel = new THREE.CSS2DObject(londiv);
+			lonlabel.position.set(-f-50, 0, -f+i*(1000/180));
+			scene.add(lonlabel);
 		}
-		a {
-			color: #ffffff;
+		//longitude
+		for(var i = 0; i<180+1; i+=180/4){
+			var latdiv = document.createElement("div");
+			latdiv.className = "label";
+			latdiv.textContent = (-90+i)*2;
+			var latlabel = new THREE.CSS2DObject(latdiv);
+			latlabel.position.set(-f+i*(1000/180), 0,-f-50 );
+			scene.add(latlabel);
 		}
-	</style>
-	<body>
-		<div id="info">Location of the user and different satellites mock up</div>
-		<script src="js/three.js"></script>
-		<script src="js/OrbitControls.js"></script>
-		<script src="js/CSS2DRenderer.js"></script>
-		<script>
-			var camera, scene, renderer, labelRenderer;
-			var clock = new THREE.Clock();
-			var textureLoader = new THREE.TextureLoader();
-			var earth, iss;
-			init();
-			animate();
-			function init() {
-				var EARTH_RADIUS = 2;
-				var sat_RADIUS = 2.7;
-				camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 1000 );
-				camera.position.set( 15, 10, 40 );
-				var controls = new THREE.OrbitControls( camera );
 
-				scene = new THREE.Scene();
-				var dirLight = new THREE.DirectionalLight( 0xffffff );
-				var amLight = new THREE.AmbientLight( 0x666666);
-				dirLight.position.set( 0, 3, 1 );
-				amLight.position.set( 2, 2, 2 );
-				var controls = new THREE.OrbitControls( dirLight );
-				scene.add( dirLight );
-				scene.add( amLight );
-				var axesHelper = new THREE.AxesHelper( 15 );
-				scene.add( axesHelper );
-				//
-				var earthGeometry = new THREE.SphereBufferGeometry( EARTH_RADIUS, 32, 32 );
-				var earthMaterial = new THREE.MeshPhongMaterial( {
-					color: 0xffffff
-				} );
-				earth = new THREE.Mesh( earthGeometry, earthMaterial );
-				scene.add( earth );
-
-				var issGeometry = new THREE.SphereBufferGeometry( sat_RADIUS/10, 16, 16 );
-				var issMaterial = new THREE.MeshPhongMaterial( {
-					color: 0x00ff00
-				} );
-				iss = new THREE.Mesh( issGeometry, issMaterial );
-				scene.add( iss );
-				//
-				var ses1Geometry = new THREE.SphereBufferGeometry( sat_RADIUS/10, 16, 16 );
-				var ses1Material = new THREE.MeshPhongMaterial( {
-					color: 0xff0000
-				} );
-				ses1 = new THREE.Mesh( ses1Geometry, ses1Material );
-				scene.add( ses1 );
-
-				var noaa19Geometry = new THREE.SphereBufferGeometry( sat_RADIUS/10, 16, 16 );
-				var noaa19Material = new THREE.MeshPhongMaterial( {
-					color: 0x0000ff
-				} );
-				noaa19 = new THREE.Mesh( noaa19Geometry, noaa19Material );
-				scene.add( noaa19 );
-
-				var you = document.createElement( 'div' );
-				you.className = 'label';
-				you.textContent = 'You';
-				you.style.marginTop = '-1em';
-				var earthLabel = new THREE.CSS2DObject( you );
-				earthLabel.position.set( 0, EARTH_RADIUS, 0 );
-				earth.add( earthLabel );
-
-
-				var issDiv = document.createElement( 'div' );
-				issDiv.className = 'label';
-				issDiv.textContent = 'ISS';
-				issDiv.style.marginTop = '-1em';
-				var issLabel = new THREE.CSS2DObject( issDiv );
-				issLabel.position.set( 0, sat_RADIUS/10, 0 );
-				iss.add( issLabel );
-
-				var ses1Div = document.createElement( 'div' );
-				ses1Div.className = 'label';
-				ses1Div.textContent = 'SES1';
-				ses1Div.style.marginTop = '-1em';
-				var ses1Label = new THREE.CSS2DObject( ses1Div );
-				ses1Label.position.set( 0, sat_RADIUS/10, 0 );
-				ses1.add( ses1Label );
-
-				var noaa19Div = document.createElement( 'div' );
-				noaa19Div.className = 'label';
-				noaa19Div.textContent = 'NOAA19';
-				noaa19Div.style.marginTop = '-1em';
-				var noaa19Label = new THREE.CSS2DObject( noaa19Div );
-				noaa19Label.position.set( 0, sat_RADIUS/10, 0 );
-				noaa19.add( noaa19Label );
-
-				//
-				renderer = new THREE.WebGLRenderer();
-				renderer.setPixelRatio( window.devicePixelRatio );
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				document.body.appendChild( renderer.domElement );
-				labelRenderer = new THREE.CSS2DRenderer();
-				labelRenderer.setSize( window.innerWidth, window.innerHeight );
-				labelRenderer.domElement.style.position = 'absolute';
-				labelRenderer.domElement.style.top = 0;
-				document.body.appendChild( labelRenderer.domElement );
+		var button = document.createElement("input");
+		button.setAttribute("id","onoff");
+		button.setAttribute("type","button");
+		button.setAttribute("value", "hide");
+		document.getElementById("righttop").appendChild(button);
+		button.onclick = function onoff() {
+	  		var currentvalue = document.getElementById('onoff').value;
+	  		var labels = document.getElementsByClassName("label");
+	  		if(currentvalue ==  "hide"){
+	  			document.getElementById("onoff").value = "show";
+	   			for(var i = 0; i < labels.length; i+=1){
+	   				labels[i].style.display = "none";
+	   			}
+	   			scene.remove(axes);
+	  		}else{
+	  	 		document.getElementById("onoff").value = "hide";
+	   			for(var i = 0; i < labels.length; i+=1){
+	   				labels[i].style.display = "block";
+	   			}
+	   			scene.add(axes);
 			}
-			function animate() {
-				requestAnimationFrame( animate );
-				var elapsed = clock.getElapsedTime();
-				iss.position.set( Math.sin( elapsed/20 ) * 15, 0, Math.cos( elapsed/20 ) * 15);
-				ses1.position.set(0, Math.sin( elapsed/10 ) * 12, Math.cos( elapsed/10 ) * 12);
-				noaa19.position.set(Math.cos( elapsed/8 ) * 13, 0, Math.sin( elapsed/8 ) * 13);
-				renderer.render( scene, camera );
-				labelRenderer.render( scene, camera );
+		}
+
+
+
+
+		/*******
+		 * Curves
+		 *********/
+		for ( var i = 0; i < splinePointsLength; i+=1) {
+			addSplineObject( positions[ i ] );
+		}
+		positions = [];
+		console.log(positions);
+		for ( var i = 0; i < splinePointsLength; i+=1) {
+			positions.push( splineHelperObjects[ i ].position );
+		}
+		// create curves
+		var geometry = new THREE.BufferGeometry();
+		geometry.addAttribute( 
+			"position", new THREE.BufferAttribute( new Float32Array( ARC_SEGMENTS * 3 ), 3 ) 
+		);
+		//red curve
+		var curve = new THREE.CatmullRomCurve3( positions );
+		curve.curveType = 'catmullrom';
+		curve.mesh = new THREE.Line( geometry.clone(), new THREE.LineBasicMaterial( {
+			color: 0xff0000
+		} ) );
+		curve.tension= 0.3;
+		curve.mesh.castShadow = true;
+		splines.uniform = curve;
+
+		// green curve
+		curve = new THREE.CatmullRomCurve3( positions );
+		curve.curveType = "centripetal";
+		curve.mesh = new THREE.Line( geometry.clone(), new THREE.LineBasicMaterial( {
+			color: 0x00ff00
+		} ) );
+		curve.mesh.castShadow = true;
+		splines.centripetal = curve;
+
+		// blue curve
+		var curve = new THREE.CatmullRomCurve3( positions );
+		curve.curveType = 'chordal';
+		var points = curve.getPoints(50);
+		curve.mesh = new THREE.Line( geometry.clone(), new THREE.LineBasicMaterial( {
+			color: 0x0000ff
+		} ) );
+		curve.mesh.castShadow = true;
+		splines.chordal = curve;
+		for ( var k in splines ) {
+			var spline = splines[ k ];
+			scene.add( spline.mesh );
+		}
+
+
+		load( [
+				new THREE.Vector3(userlat*flat,0,userlon*flon),
+				new THREE.Vector3(10.1111*flat, 409/400*8*d-8*d, -88.2316*flon),
+				new THREE.Vector3(28.0866*flat, 411/400*8*d-8*d, -73.0249*flon), 
+				new THREE.Vector3(43.4679*flat, 414/400*8*d-8*d, -51.2022*flon), 
+				new THREE.Vector3(51.3258*flat, 416/400*8*d-8*d, -21.419*flon), 
+				new THREE.Vector3(48.8211*flat, 415/400*8*d-8*d, 13.4527*flon), 
+				new THREE.Vector3(37.0157*flat, 412/400*8*d-8*d, 39.6416*flon), 
+				new THREE.Vector3(20.4978*flat, 410/400*8*d-8*d, 57.3909*flon), 
+				new THREE.Vector3(2.4103*flat, 409/400*8*d-8*d, 71.0778*flon), 
+				new THREE.Vector3(-15.8361*flat, 413/400*8*d-8*d, 84.3502*flon), 
+				new THREE.Vector3(-32.8459*flat, 419/400*8*d-8*d, 100.4621*flon), 
+				new THREE.Vector3(-46.2833*flat, 424/400*8*d-8*d, 123.7943*flon), 
+				new THREE.Vector3(-51.6819*flat, 426/400*8*d-8*d, 161.8821*flon), 
+				new THREE.Vector3(-46.2162*flat, 424/400*8*d-8*d, -169.8468*flon), 
+				new THREE.Vector3(-31.9072*flat, 419/400*8*d-8*d, -145.5937*flon), 
+				new THREE.Vector3(-15.7223*flat, 413/400*8*d-8*d, -130.4974*flon), 
+				new THREE.Vector3(2.5258*flat, 410/400*8*d-8*d, -117.2331*flon), 
+				new THREE.Vector3(20.6069*flat, 410/400*8*d-8*d, -103.5349*flon), 
+				new THREE.Vector3(36.9836*flat, 412/400*8*d-8*d, -85.9246*flon), 
+				new THREE.Vector3(48.8034*flat, 415/400*8*d-8*d, -59.7598*flon), 
+				new THREE.Vector3(50.3973*flat, 415/400*8*d-8*d, -17.6736*flon),
+				new THREE.Vector3(41.0817*flat, 413/400*8*d-8*d, 9.6019*flon), 
+				new THREE.Vector3(25.8305*flat, 410/400*8*d-8*d, 29.0229*flon), 
+				new THREE.Vector3(2.7722*flat, 409/400*8*d-8*d, 47.2675*flon), 
+				new THREE.Vector3(-12.8838*flat, 412/400*8*d-8*d, 58.5174*flon), 
+				new THREE.Vector3(-31.383*flat, 418/400*8*d-8*d, 75.202*flon), 
+				new THREE.Vector3(-40.9403*flat, 422/400*8*d-8*d, 88.5843*flon), 
+				new THREE.Vector3(-51.7799*flat, 426/400*8*d-8*d, 135.2308*flon), 
+				new THREE.Vector3(-48.1346*flat, 425/400*8*d-8*d, 160.6755*flon), 
+				new THREE.Vector3(-33.9223*flat, 419/400*8*d-8*d, -171.5707*flon), 
+				new THREE.Vector3(-18.1522*flat, 414/400*8*d-8*d, -155.9976*flon), 
+				
+
+				
+		] );				
+		window.addEventListener( 'resize', onWindowResize, false );
+	}
+
+
+	function addSplineObject( position ) { 
+		// red ball
+		var material = new THREE.MeshLambertMaterial( { color: 0xff0000 } );
+		var object = new THREE.Mesh( geometry, material );
+		if ( position ) {
+			object.position.copy( position );
+		}
+		object.castShadow = true;
+		object.receiveShadow = true;
+		scene.add( object );
+		splineHelperObjects.push( object );
+		return object;
+	}
+
+	function updateSplineOutline() {
+		for ( var k in splines ) {
+			var spline = splines[ k ];
+			var position = spline.mesh.geometry.attributes.position;
+			
+			for ( var i = 0; i < ARC_SEGMENTS; i ++ ) {
+				var t = i / ( ARC_SEGMENTS - 1 );
+				spline.getPoint( t, point );
+				position.setXYZ( i, point.x, point.y, point.z );
 			}
-		</script>
-	</body>
+			position.needsUpdate = true;
+		}
+	}
+	function load( new_positions ) {
+		while ( new_positions.length > positions.length ) {
+			splinePointsLength ++;
+			positions.push( addSplineObject().position );
+			updateSplineOutline();
+		}
+		for ( var i = 0; i < positions.length; i ++ ) {
+			positions[ i ].copy( new_positions[ i ] );
+		}
+		updateSplineOutline();
+	}
+
+
+
+
+	function onWindowResize() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		labelRenderer.setSize( window.innerWidth, window.innerHeight )
+		render();
+	}
+	function animate() {
+		requestAnimationFrame( animate );
+		render();
+	}
+	function render() {
+		renderer.render( scene, camera );
+		labelRenderer.render( scene, camera );
+	}
+</script>
+</body>
 </html>

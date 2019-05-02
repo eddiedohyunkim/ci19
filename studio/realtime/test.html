@@ -1,0 +1,37 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="info"></div>
+<script>
+	var info = document.getElementById("info");
+	var userlat;
+	var userlon;
+
+	function getLocation() {
+			navigator.geolocation.getCurrentPosition(showPosition);
+			console.log(userlat);
+			console.log(userlon);
+		}
+	getLocation();
+
+	function showPosition(position) {
+		console.log(position);
+		userlat = position.coords.latitude;
+		userlon = position.coords.longitude;
+		info.innerHTML = "Your coordinates<br>Latitude: "+userlat+"<br>Longitude: "+userlon;
+	}
+
+	function show(callback){
+		console.log(userlat);
+		console.log(userlon);
+		callback(console.log);
+		callback(console.log);
+	}
+	show(showPosition);
+
+</script>
+
+</body>
+</html>
