@@ -1,0 +1,441 @@
+<html>
+<head>
+<title>ISS vector drawing</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<style>
+	body {
+		color: #00000;
+		font-family: helvetica;
+		background-color: #f0f0f0;
+		margin: 0;
+		overflow: hidden;
+		font-size: 0.8vw;
+	}
+	#info {
+		position: absolute;
+		top: 15px;
+		width: 100%;
+		text-align: center;
+		
+	}
+	#lefttop{
+		display: flex;
+		flex-direction: column;
+		position: absolute;
+		top: 15px;
+		left: 15px;
+	}
+	#righttop{
+		position: absolute;
+		top: 15px;
+		right: 15px;
+	}
+	.label{
+		font-size: 10px;
+		color: #404040;
+	}
+	.iss{
+		font-size: 8px;
+		color: #ffffff;
+		width: 13px;
+		height:11px;
+		padding: 2px;
+		padding-top: 4px;
+		border-radius: 50%;
+		text-align: center;
+		background-color: rgba(0,0,0,0.6);
+	}
+	input{
+		width: 60px;
+	}
+</style>
+</head>
+<body>
+	<div id="container"></div>
+	<div id="info">24hour vector drawing</div>
+	<div id="lefttop"></div>
+	<div id="righttop"></div>
+
+	<script src="js/three.js"></script>
+	<script src="js/OrbitControls.js"></script>
+	<script src="js/CSS2DRenderer.js"></script>
+<script>
+	// geolocation api here
+	var container;
+	var d = 1000;
+	var f = d/2;
+	var flat = (f/90);
+	var flon = (f/180);
+	var falt = 1;
+	var userlat = 40.7219;
+	var userlon = -74.0343;
+	var empty =[];
+	var x;
+	var y;
+	var z;
+	var camera, scene, renderer, labelRenderer;
+	var ARC_SEGMENTS = 5000;
+
+	init();
+	animate();
+	function init() {	
+		container = document.getElementById("container");
+		scene = new THREE.Scene();
+		scene.position.set(0,-200,0);
+		scene.background = new THREE.Color(0xf0f0f0);
+		camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+		camera.position.set(d-200, 300, d-200);
+		scene.add( camera );
+		
+		// scene.add( new THREE.AmbientLight());
+		var light = new THREE.SpotLight();
+		light.position.set(0, 1000, 0);
+		light.castShadow = true;
+		light.shadow = new THREE.LightShadow( new THREE.OrthographicCamera(d/-2, d/2, d/2, d/-2,1,2000));
+		light.shadow.mapSize.width = d;
+		light.shadow.mapSize.height = d;
+		scene.add(light);
+
+		var planeGeometry = new THREE.PlaneBufferGeometry(1500, 1500);
+		planeGeometry.rotateX(- Math.PI / 2);
+		var planeMaterial = new THREE.ShadowMaterial({opacity: 0.4});
+		var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+		plane.receiveShadow = true;
+		scene.add(plane);
+		var helper = new THREE.GridHelper(1500, 100, 0xd0d0d0, 0xd0d0d0);
+		scene.add(helper);
+		var axes = new THREE.AxesHelper(d);
+		axes.position.set(-500, 0, -500);
+
+		renderer = new THREE.WebGLRenderer({antialias: true});
+		renderer.setPixelRatio(window.devicePixelRatio);
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.shadowMap.enabled = true;
+		container.appendChild(renderer.domElement);
+
+		labelRenderer = new THREE.CSS2DRenderer();
+		labelRenderer.setSize(window.innerWidth, window.innerHeight);
+		labelRenderer.domElement.style.position = 'absolute';
+		labelRenderer.domElement.style.top = 0;
+		container.appendChild(labelRenderer.domElement);
+		var controls = new THREE.OrbitControls(camera);
+		function hideandseek(){
+			var ylw = "#ff0000";
+			var g = "#808080";
+			var dg = "#808080";
+			var lfs = "10px";
+			var labels = [ ["N",f,0,0,ylw,lfs],["S",-f,0,0,ylw,lfs],["E",0,0,-f,ylw,lfs],["W",0,0,f,ylw,lfs],["Latitude",-f,0,f+80,g,lfs],["Longitude",f+80,0,-f,g,lfs], ["Altitude (km)",-f, d+50, -f,g,lfs] ]
+			for(var i = 0; i<labels.length; i+=1){
+				var lbl = document.createElement("div");
+				var label = labels[i];
+				lbl.style.fontSize = label[5];
+				lbl.className = "label";
+				lbl.style.color = label[4];
+				lbl.textContent = label[0];
+				var lbldiv = new THREE.CSS2DObject(lbl);
+				lbldiv.position.set(label[1],label[2],label[3]);
+				scene.add(lbldiv);
+			}
+			//altitude
+			for(var i = 400; i<440+1; i+=20){
+				var altDiv = document.createElement("div");
+				altDiv.className = "label";
+				altDiv.textContent = i;
+				var altlabel = new THREE.CSS2DObject(altDiv);
+				altlabel.position.set(-f, (i/400)*10*d-10*d, -f);
+				scene.add(altlabel);
+			}
+			//latitude
+			for(var i = 0; i<180+1; i+=180/4){
+				var londiv = document.createElement("div");
+				londiv.className = "label";
+				londiv.textContent = -90+i;
+				var lonlabel = new THREE.CSS2DObject(londiv);
+				lonlabel.position.set(-f-50, 0, -f+i*(1000/180));
+				scene.add(lonlabel);
+			}
+			//longitude
+			for(var i = 0; i<180+1; i+=180/4){
+				var latdiv = document.createElement("div");
+				latdiv.className = "label";
+				latdiv.textContent = (-90+i)*2;
+				var latlabel = new THREE.CSS2DObject(latdiv);
+				latlabel.position.set(-f+i*(1000/180), 0,-f-50 );
+				scene.add(latlabel);
+			}
+			scene.add(axes);
+		}
+		
+		var but1 = document.createElement("input");
+		but1.setAttribute("id","nums");
+		but1.setAttribute("type","button");
+		but1.setAttribute("value", "points");
+		document.getElementById("lefttop").appendChild(but1);
+		var but2 = document.createElement("input");
+		but2.setAttribute("id","axes");
+		but2.setAttribute("type","button");
+		but2.setAttribute("value", "XYZ");
+		document.getElementById("lefttop").appendChild(but2);
+
+		but1.onclick = function () {
+	  		var currentvalue = document.getElementById('nums').value;
+	  		var iss = document.getElementsByClassName("iss");
+	  		if(currentvalue=="points"){
+	  			document.getElementById("nums").value = "hide";
+	   			hideandseek2(); }else{
+	  	 		document.getElementById("nums").value = "points";
+	   			for(var i = 0; i < iss.length; i+=1){ iss[i].style.display = "none";}
+			}
+		}
+		but2.onclick = function () {
+	  		var currentvalue = document.getElementById('axes').value;
+	  		var labels = document.getElementsByClassName("label");
+	  		if(currentvalue=="XYZ"){
+	  			document.getElementById("axes").value = "hide";
+	   			hideandseek(); }else{
+	  	 		document.getElementById("axes").value = "XYZ";
+	   			for(var i = 0; i < labels.length; i+=1){ labels[i].style.display = "none";}
+	   			scene.remove(axes);
+			}
+		}
+		
+		var array = [
+			{"x": 51, "y": 416, "z": 43},
+			{"x":10.1111,"y":409, "z":-88.2316},
+			{"x":28.0866,"y":411, "z":-73.0249},
+			{"x":43.4679, "y":414, "z":-51.2022},
+			{"x":51.3258, "y":416, "z":-21.419},
+			{"x":48.8211, "y":415, "z":13.4527},
+			{"x":37.0157, "y":412, "z":39.6416},
+			{"x":42.9394,"y": 414, "z":-122.9623}, 
+			{"x":51.3117,"y": 416, "z":-92.2231}, 
+			{"x":48.8518,"y": 415, "z":-57.338}, 
+			{"x":41.6802,"y": 413, "z":-38.6007}, 
+			{"x":26.3639,"y": 410, "z":-18.6035 }, 
+			{"x":8.5929,"y": 409, "z":-4.0045 }, 
+			{"x":-9.7933,"y": 411, "z":9.104 }, 
+			{"x":-27.8209,"y": 417, "z":24.2726 }, 
+			{"x":-42.3407,"y": 423, "z":44.0754 }, 
+			{"x":-51.1158,"y": 426, "z":74.1355 }, 
+			{"x":-49.2827,"y": 425, "z":109.0834 }, 
+			{"x":-37.9358,"y": 421, "z":135.8442 }, 
+			{"x":-12.9462,"y": 412, "z":160.9786 }, 
+			{"x":-3.7763,"y": 411, "z":167.6575 }, 
+			{"x":14.5075,"y": 409, "z":-179.1395 }, 
+			{"x":31.6933,"y": 411, "z":-163.3403 }, 
+			{"x":45.5375,"y": 414, "z":-140.6253 }, 
+			{"x":51.7724,"y": 416, "z":-107.8566 }, 
+			{"x":46.8658,"y": 415, "z":-74.131 }, 
+			{"x":33.707,"y": 412, "z":-50.1828 },
+			{"x":16.7879,"y": 409, "z":-33.7737 },
+			{"x":-5.2662,"y": 410, "z":-17.7213 },
+			{"x":-22.5664,"y": 415, "z":-4.2605 },
+			{"x":-36.1506,"y": 420, "z":10.4758 },
+			{"x":-48.2936,"y": 425, "z":35.8808 },
+			{"x":-51.5209,"y": 426, "z":70.375 },
+			{"x":-43.6047,"y": 423, "z":102.2233 },
+			{"x":-26.363,"y": 417, "z":126.0548 },
+			{"x":20.29,"y": 410, "z":-60.2084 },
+			{"x":2.2442,"y": 409, "z":-46.5805 },
+			{"x":-15.9977,"y": 413, "z":-33.2976 },
+			{"x":-32.9879,"y": 419, "z":-17.1418 },
+			{"x":-46.376,"y": 424, "z":6.2781 },
+			{"x":-51.7955,"y": 426, "z":39.5486 },
+			{"x":-46.1207,"y": 424, "z":72.635 },
+			{"x":-32.6007,"y": 419, "z":95.8171 },
+			{"x":-15.5594,"y": 413, "z":111.8546 },
+			{"x":3.4072,"y": 410, "z":125.6145 },
+			{"x":20.7659,"y": 410, "z":138.8262 },
+			{"x":37.1168,"y": 412, "z":156.4922 },
+			{"x":48.8967,"y": 415, "z":-177.1593 },
+			{"x":51.2233,"y": 416, "z":-141.5702 },
+			{"x":42.8336, "y": 414,"z":-111.5008},
+			{"x":28.0175, "y":411, "z":-90.9178},
+			{"x":10.0853, "y":409, "z":-75.762},
+			{"x":-7.8952, "y":411, "z":-62.9448},
+			{"x":-25.6499, "y":416, "z":-48.5306},
+			{"x":-41.0957, "y":422, "z":-28.9142},
+			{"x":-50.6843, "y":426, "z":0.1638},
+			{"x":-49.943, "y":426, "z":35.2924},
+			{"x":-39.2947, "y":421, "z":63.071},
+			{"x":-23.4389, "y":415, "z":81.69},
+			{"x":43.116, "y":414, "z":-135.6277},
+			{"x":28.7631, "y":411, "z":-115.2387},
+			{"x":11.2547, "y":409, "z":-100.1795},
+			{"x":-7.0756, "y":411, "z":-87.0882},
+			{"x":-24.8875, "y":416, "z":-72.8048},
+			{"x":-40.4582, "y":422, "z":-53.5861},
+			{"x":-50.4484, "y":426, "z":-24.9108},
+			{"x":-49.8736, "y":426, "z":12.098},
+			{"x":-38.7914, "y":421, "z":40.3185},
+			{"x":-17.3082, "y":414, "z":63.359},
+			{"x":0.8922, "y":410, "z":76.7328},
+			{"x":38.8619, "y":413, "z":64.8963},
+			{"x":49.7034, "y":415, "z":92.1687},
+			{"x":50.8468, "y":416, "z":127.3572},
+			{"x":41.462, "y":413, "z":156.921},
+			{"x":26.0826, "y":410, "z":176.7878},
+			{"x":8.3912, "y":409, "z":-168.74},
+			{"x":-9.9436, "y":411, "z":-155.6678},
+			{"x":-27.5881, "y":417, "z":-140.8454},
+			{"x":-42.5163, "y":423, "z":-120.4635}, 
+			{"x":-51.1807, "y":426, "z":-90.1663},
+			{"x":-49.1588, "y":425, "z":-55.2636},
+			{"x":-37.6932, "y":421, "z":-28.6762}, 
+			{"x":-21.489, "y":415, "z":-10.7966},
+			{"x":-3.4671, "y":410, "z":2.9949},
+			{"x":14.8108, "y":409, "z":16.2136},
+			{"x":33.8045, "y":412, "z":34.2993},
+			{"x":45.7509, "y":414, "z":55.041},
+			{"x":51.1573, "y":416, "z":101.2767},
+			{"x":43.2019, "y":414, "z":129.9749},
+			{"x":27.9101, "y":411, "z":151.4205},
+			{"x":10.5749, "y":409, "z":166.1053},
+			{"x":-1.7478, "y":410, "z":174.9053},
+			{"x":-28.3678, "y":417, "z":-163.6057}, 
+			{"x":-36.3176, "y":420, "z":-154.1764},
+			{"x":-48.4125, "y":425, "z":-128.569},
+			{"x":-51.477, "y":426, "z":-93.9119},
+			{"x":-43.6703, "y":423, "z":-62.7983},
+			{"x":-28.9554, "y":417, "z":-41.4462},
+			{"x":-11.5925, "y":412, "z":-26.4395},
+			{"x":6.7305, "y":409, "z":-13.3447},
+			{"x":24.5821, "y":410, "z":0.9028},
+			{"x":40.2432, "y":413, "z":20.0423},
+			{"x":50.3755, "y":416, "z":48.6483},
+			{"x":50.2791, "y":415, "z":83.92},
+			{"x":40.014, "y":413, "z":112.3486},
+			{"x":24.2947, "y":410, "z":131.368},
+			{"x":6.4228, "y":409, "z":145.5696},
+			{"x":-11.8978, "y":412, "z":158.6721},
+			{"x":-29.3246, "y":417, "z":173.8401},
+			{"x":-43.8398, "y":423, "z":-164.83},
+			{"x":-51.6843, "y":426, "z":-130.7117},
+			{"x":-47.1272, "y":424, "z":-95.1324},
+			{"x":-34.376, "y":419, "z":-71.2445},
+			{"x":-17.2416, "y":413, "z":-54.362},
+			{"x":0.6042, "y":410, "z":-41.2445},
+			{"x":18.7643, "y":410, "z":-27.7371},
+			{"x":35.4179, "y":412, "z":-10.7372},
+			{"x":47.9154, "y":415, "z":14.3349},
+			{"x":51.6147, "y":416, "z":48.7286},
+			{"x":44.2799, "y":414, "z":80.5289},
+			{"x":29.5769, "y":411, "z":102.5718},
+			{"x":12.5032, "y":409, "z":117.5554},
+			{"x":-5.8141, "y":411, "z":130.6777},
+			{"x":-23.7057, "y":415, "z":144.7726},
+			{"x":-39.5116, "y":421, "z":163.4999},
+			{"x":-50.0422, "y":426, "z":-168.5546},
+			{"x":-50.6046, "y":426, "z":-133.4094},
+			{"x":-40.8504, "y":422, "z":-104.4285},
+			{"x":-25.3846, "y":416, "z":-84.9956},
+			{"x":-7.6103, "y":411, "z":-70.6286},
+			{"x":10.7723, "y":409, "z":-57.5101},
+			{"x":30.0154, "y":411, "z":-40.7603},
+			{"x":44.1699, "y":414, "z":-19.4381},
+			{"x":51.7742, "y":416, "z":16.6634},
+			{"x":44.925, "y":414, "z":55.4704},
+			{"x":32.2781, "y":411, "z":75.9926},
+			{"x":20.496, "y":410, "z":87.6249},
+			{"x":-6.7226, "y":411, "z":107.7733},
+			{"x":-20.2219, "y":414, "z":118.1589},
+			{"x":-38.4504, "y":421, "z":138.2664},
+			{"x":-49.0947, "y":425, "z":163.442},
+			{"x":-51.0944, "y":426, "z":-160.6138},
+			{"x":-42.4478, "y":423, "z":-130.9525},
+			{"x":-27.3122, "y":417, "z":-110.4285},
+			{"x":-9.745, "y":412, "z":-95.7372},
+			{"x":8.5898, "y":409, "z":-82.6667},
+			{"x":26.3131, "y":411, "z":-68.1152},
+			{"x":41.6039, "y":413, "z":-48.2105},
+			{"x":50.8967, "y":416, "z":-18.5347},
+			{"x":49.6293, "y":415, "z":16.6346},
+			{"x":38.5898, "y":413, "z":43.977},
+			{"x":22.4909, "y":410, "z":62.3362},
+			{"x":4.5513, "y":409, "z":76.2403},
+			{"x":-13.7421, "y":412, "z":89.4038},
+			{"x":-31.0312, "y":418, "z":105.0376},
+			{"x":-45.0237, "y":424, "z":127.2249},
+			{"x":-51.7242, "y":426, "z":159.5927},
+			{"x":-47.373, "y":424, "z":-166.5583},
+			{"x":-34.5578, "y":419, "z":-142.1412},
+			{"x":-17.7477, "y":414, "z":-125.4353},
+			{"x":0.4385, "y":410, "z":-112.0258},
+			{"x":18.5557, "y":410, "z":-98.5735},
+			{"x":35.2388, "y":412, "z":-81.639},
+			{"x":47.8093, "y":415, "z":-56.6879},
+			{"x":51.6384, "y":416, "z":-22.3569},
+			{"x":44.4174, "y":414, "z":9.5511},
+			{"x":30.0878, "y":411, "z":31.356},
+			{"x":12.6658, "y":409, "z":46.768},
+			{"x":-5.5985, "y":411, "z":59.8591},
+			{"x":-23.5516, "y":415, "z":73.9679},
+			{"x":-39.3483, "y":421, "z":92.5707},
+			{"x":-49.9682, "y":425, "z":120.3918},
+			{"x":-50.6507, "y":426, "z":155.6211},
+			{"x":-41.0068, "y":422, "z":-175.3701},
+			{"x":-25.5364, "y":416, "z":-155.8045},
+			{"x":-7.8242, "y":411, "z":-141.4476},
+			{"x":10.5596, "y":409, "z":-128.332},
+			{"x":28.1271, "y":411, "z":-113.4145},
+			{"x":42.95, "y":414, "z":-92.7082},
+			{"x":51.3241, "y":416, "z":-61.8632},
+			{"x":48.8459, "y":415, "z":-27.0796},
+
+		];
+		for(var i=0; i<array.length; i++){
+			z = array[i].x*flat;
+			y = array[i].y/400*8*d-8*d;
+			x = array[i].z*flon;
+			var repeat = new THREE.Vector3(x, y, z);
+			empty.push(repeat);
+		}
+		console.log(empty);
+
+		var curve = new THREE.CatmullRomCurve3(empty);
+		var points = curve.getPoints(array.length*20);
+		var geom = new THREE.BufferGeometry().setFromPoints(points);
+		curve.curveType = 'centripetal';
+		var mat = new THREE.LineBasicMaterial({color:0x0000ff});
+		// Create the final object to add to the scene
+		var curves = new THREE.Line( geom, mat );
+		curves.castShadow = true;
+		scene.add(curves);
+		
+		function hideandseek2(){
+			for(var i = 0; i<array.length; i+=1){
+				z = array[i].x*flat;
+				y = array[i].y/400*8*d-8*d;
+				x = array[i].z*flon;
+				var tag = document.createElement("div");
+				tag.className = "iss";
+				tag.textContent = i;
+				var tags = new THREE.CSS2DObject(tag);
+				tags.position.set(x, y, z);
+				scene.add(tags);
+			}
+		}
+		
+
+		window.addEventListener( 'resize', onWindowResize, false );
+}
+
+	function onWindowResize() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		labelRenderer.setSize( window.innerWidth, window.innerHeight )
+		render();
+	}
+	function animate() {
+		requestAnimationFrame( animate );
+		render();
+	}
+	function render() {
+		renderer.render( scene, camera );
+		labelRenderer.render( scene, camera );
+	}
+</script>
+</body>
+</html>

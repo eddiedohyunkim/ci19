@@ -1,0 +1,31 @@
+<html>
+<title>iss</title>
+<body>
+<script>
+var array = [];
+var interval = setInterval(function(){
+	if(array.length === 3){ // It will stop at array.length 4
+    	clearInterval(interval);
+	}
+	loop();
+}, 60000);
+
+function loop(){
+		var url = "https://www.n2yo.com/rest/v1/satellite/positions/25544/0.000/0.000/0/2/&apiKey=T9UGNG-T7NV6L-PFQ4R2-3ZHU"
+		fetch(url)
+			.then(function(response){return response.json();})
+			.then(function(json){where(json);})
+		function where(data) {
+			var obj = {};
+			obj["x"] = parseFloat(data.positions[0].satlatitude.toFixed());
+			obj["y"] = parseFloat(data.positions[0].sataltitude.toFixed());
+			obj["z"] = parseFloat(data.positions[0].satlongitude.toFixed());
+			array.push(obj);
+			console.log(array);
+			console.log(data.info.transactionscount);
+		}
+	}
+loop();
+</script>
+</body>
+</html>
