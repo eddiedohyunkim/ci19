@@ -10,7 +10,7 @@
 		background-color: #f0f0f0;
 		margin: 0;
 		overflow: hidden;
-		font-size: 1vw;
+		font-size: 0.8vw;
 	}
 	#info {
 		position: absolute;
@@ -53,7 +53,7 @@
 </head>
 <body>
 	<div id="container"></div>
-	<div id="info">24hour vector drawing</div>
+	<div id="info">ISS 24hour vector drawing</div>
 	<div id="lefttop"></div>
 	<div id="righttop"></div>
 
@@ -85,17 +85,17 @@
 		scene.position.set(0,-200,0);
 		scene.background = new THREE.Color(0xf0f0f0);
 		camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
-		camera.position.set(d-200, 300, d-200);
-		scene.add( camera );
-		
-		// scene.add( new THREE.AmbientLight());
-		var light = new THREE.SpotLight();
+		camera.position.set(0, 600, 1000);
+		scene.add(camera);
+		scene.add( new THREE.AmbientLight({color: 0x202020}));
+		var light = new THREE.SpotLight({color: 0xa0a0a0});
 		light.position.set(0, 1000, 0);
 		light.castShadow = true;
 		light.shadow = new THREE.LightShadow( new THREE.OrthographicCamera(d/-2, d/2, d/2, d/-2,1,2000));
-		light.shadow.mapSize.width = d;
-		light.shadow.mapSize.height = d;
+		light.shadow.mapSize.width = d+200;
+		light.shadow.mapSize.height = d+200;
 		scene.add(light);
+
 
 		var planeGeometry = new THREE.PlaneBufferGeometry(1500, 1500);
 		planeGeometry.rotateX(- Math.PI / 2);
@@ -446,17 +446,44 @@
 		var curve = new THREE.CatmullRomCurve3(empty);
 		var points = curve.getPoints(array.length*20);
 		var geom = new THREE.BufferGeometry().setFromPoints(points);
-		curve.curveType = 'centripetal';
 		var mat = new THREE.LineBasicMaterial({color:0x0000ff});
-		// Create the final object to add to the scene
 		var curves = new THREE.Line( geom, mat );
 		curves.castShadow = true;
 		scene.add(curves);
+
+		var size = array.length;
+		var rainbow = new Array(size);
+		for (var i=0; i<size; i++) {
+			var red   = sin_to_hex(i, 0 * Math.PI * 2/3); // 0   deg
+			var blue  = sin_to_hex(i, 1 * Math.PI * 2/3); // 120 deg
+			var green = sin_to_hex(i, 2 * Math.PI * 2/3); // 240 deg
+	
+			rainbow[i] = "#"+ red + green + blue;
+		}
+
+		function sin_to_hex(i, phase) {
+			var sin = Math.sin(Math.PI / size * 2 * i + phase);
+			var int = Math.floor(sin * 127) + 128;
+			var hex = int.toString(16);
+			return hex.length === 1 ? "0"+hex : hex;
+		}
+
+		for(var i = 0; i<array.length; i+=1){
+			z = array[i].x*flat;
+			y = array[i].y/400*8*d-8*d;
+			x = array[i].z*flon;
+			var geometry = new THREE.SphereGeometry( 10, 32, 32 );
+			var material = new THREE.MeshPhongMaterial( {color: rainbow[i]});
+			var sphere = new THREE.Mesh( geometry, material );
+			sphere.position.set(x, y, z);
+			sphere.castShadow = true;
+			scene.add( sphere );
+		}
 		
 		function hideandseek2(){
 			for(var i = 0; i<array.length; i+=1){
 				z = array[i].x*flat;
-				y = array[i].y/400*8*d-8*d;
+				y = array[i].y/400*8*d-8*d+20;
 				x = array[i].z*flon;
 				var tag = document.createElement("div");
 				tag.className = "iss";
@@ -466,10 +493,8 @@
 				scene.add(tags);
 			}
 		}
-		
-
 		window.addEventListener( 'resize', onWindowResize, false );
-}
+	}
 
 	function onWindowResize() {
 		camera.aspect = window.innerWidth / window.innerHeight;
