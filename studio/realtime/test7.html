@@ -109,19 +109,14 @@
 		background-color: #000000;
 		color: #ffffff;
 		margin: auto;
-		padding: 20px;
 		border: 1px solid #000000;
 		width: 60%;
-		height:35%;
+		height:40%;
 		box-shadow: 0 0 25px blue;
 	}
-	#modaltext, #modaltext2{
+	#modaltext, #modaltext2, #modaltext3{
 		margin: 20px;
 		word-wrap: break-word;
-	}
-	#modaltext3,#givecities{
-		margin: 0px;
-		/*word-wrap: break-word;*/
 	}
 	#close, #close2, #close3{
 		color: #606060;
@@ -189,11 +184,11 @@
 	</div>
 	<div id="otherloc" class="modal3">
     	<div class="modalcontent3">
-        	<span id="close3" style="position: relative; top: -20px; right: -20px;">&times;</span>
+        	<span id="close3">&times;</span>
         	<p id="modaltext3">
-        		Check out other locations&drawings!<br>
-        		<p id="givecities"><p>
-				or <a href="https://eddiedohyunkim.github.io/ci19/studio/realtime/index.html"style="text-decoration: underline; color:#fff; margin:0px;">back to your location!<a>
+        		Check out other locations&drawings! <br>
+				<a href="https://en.wikipedia.org/wiki/International_Space_Station" target="_"style="text-decoration: underline; color:#fff">Seoul</a>,
+				<a href="https://en.wikipedia.org/wiki/International_Space_Station" target="_"style="text-decoration: underline; color:#fff">Germany</a>,
         	</p>
     	</div>
 	</div>
@@ -213,30 +208,6 @@
 	var z;
 	var camera, scene, renderer, labelRenderer;
 	var ARC_SEGMENTS = 5000;
-
-	var cities =[ 
-		{"city": "Seoul", "lat": 37.5665, "lon":126.9780},
-		{"city": "Berlin", "lat": 52.5200, "lon":13.4050},
-		{"city": "Buenos_Aires", "lat": -34.6037, "lon":-58.3816},
-		{"city": "Cairo", "lat": 30.0444, "lon":31.2357},
-		{"city": "Cape_Town", "lat": -33.9249, "lon":18.4241},
-		{"city": "Honolulu", "lat": 21.3069, "lon":-157.8583},
-		{"city": "Moscow", "lat": 55.7558, "lon":37.6173},
-		{"city": "Sydney", "lat":-33.8688, "lon":151.2093} 
-	];
-
-	for(var i =0; i<cities.length; i+=1){
-		var link = document.createElement("a");
-		var comma = document.createElement("span");
-		link.setAttribute("href","https://eddiedohyunkim.github.io/ci19/studio/realtime/"+cities[i].city+".html");
-		link.setAttribute("target","_");
-		link.innerHTML= cities[i].city;
-		comma.innerHTML = " ";
-		link.style.textDecoration = "underline";
-		link.style.color = "#ffffff"
-		document.getElementById("givecities").appendChild(link);
-		document.getElementById("givecities").appendChild(comma);
-	}
 
 	var modal = document.getElementById("popup");
 	var btn = document.getElementById("open");
