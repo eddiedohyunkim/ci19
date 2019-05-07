@@ -1,0 +1,34 @@
+<html>
+	<title></title>
+<body>
+<script>
+	var old = [10, 211, 32, 42342, 534234];
+	var neu = ["A","B","C","D","E"];
+	console.log(old);
+	console.log(neu);
+
+	update();
+	function update(){
+		var count = 0;
+		var interval = setInterval(function(){
+			count++;
+				var index = old.indexOf(old[count-1]);
+				if (index !== -1) {
+   					old[index] = neu[count-1];
+				}
+			
+			// show updates
+			console.log(old);
+
+			// final arrays 
+			if(count===old.length){
+				clearInterval(interval);
+				console.log(old);
+				//update(); to repeat?
+			}
+		}, 1000)	
+	}
+	
+</script>
+</body>
+</html>

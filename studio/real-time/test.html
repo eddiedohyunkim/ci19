@@ -1,0 +1,68 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div id="userCoords" class="remove"></div>
+<script>
+	var info = document.getElementById("userCoords");
+	var userLat;
+	var userLon;
+
+	function getLocation() {
+		if (navigator.geolocation) {navigator.geolocation.getCurrentPosition(showPosition);} else {
+    		x.innerHTML = "Geolocation is not supported by this browser.";
+  		}
+	}
+	getLocation();
+	function showPosition(position) {
+		console.log(position);
+		userLat = position.coords.latitude;
+		userLon = position.coords.longitude;
+		info.innerHTML = "Your coordinates<br>Latitude: "+userLat+"<br>Longitude: "+userLon;
+		timer();
+		setTimeout(function() { init() }, 4000);
+		
+	}
+	function timer(){
+		var c = 0;
+		var count = document.createElement("div");
+		count.className = "remove";
+		var interval = setInterval(function(){
+			c++;
+			count.innerHTML= "redirecting in "+(4-c)+"...";
+			if(c === 3){ 
+   				clearInterval(interval);
+   				setTimeout(function() { 
+   					const removeElements = (elms) => elms.forEach(el => el.remove());
+					removeElements( document.querySelectorAll(".remove") );
+   				}, 1000);
+   			}
+		}, 1000);
+		document.getElementById("userCoords").appendChild(count);
+	}
+	function init(){
+		document.body.style.backgroundColor = "red"
+	}
+
+	function showError(error) {
+  		switch(error.code) {
+    		case error.PERMISSION_DENIED:
+    			x.innerHTML = "User denied the request for Geolocation."
+    			break;
+    		case error.POSITION_UNAVAILABLE:
+    			x.innerHTML = "Location information is unavailable."
+    			break;
+    		case error.TIMEOUT:
+    			x.innerHTML = "The request to get user location timed out."
+    			break;
+    		case error.UNKNOWN_ERROR:
+    			x.innerHTML = "An unknown error occurred."
+    			break;
+		}
+	}
+
+</script>
+
+</body>
+</html>

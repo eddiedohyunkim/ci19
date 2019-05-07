@@ -1,0 +1,40 @@
+<html>
+	<title></title>
+<body>
+<script>
+var array = [];
+var interval = setInterval(function(){
+	if(array.length === 360){ 
+    	clearInterval(interval);
+    	print();
+	}
+	updateISS();
+}, 60000);
+
+function updateISS(){
+	var url = "https://api.wheretheiss.at/v1/satellites/25544"
+		fetch(url)
+			.then(function(response){return response.json();})
+			.then(function(json){where(json);})
+		function where(data) {
+			// console.log(data);
+			var obj = {};
+			obj["x"] = parseFloat(data.latitude.toFixed());
+			obj["y"] = parseFloat(data.altitude.toFixed());
+			obj["z"] = parseFloat(data.longitude.toFixed());
+			obj["v"] = parseFloat(data.velocity.toFixed());
+			array.push(obj);
+			console.log(array);
+		}
+}
+updateISS();
+function print(){
+	for(var i=0; i< array.length; i+=1){
+		var results = document.createElement("div");
+		results.innerHTML = '{'+ '"x":'+ array[i].x +', "y":'+array[i].y +', "z":'+array[i].z +', "v":'+array[i].v + '},';
+		document.body.appendChild(results);
+	}
+}
+</script>
+</body>
+</html>

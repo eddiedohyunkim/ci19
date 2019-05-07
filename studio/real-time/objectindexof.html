@@ -1,0 +1,65 @@
+<html>
+	<title></title>
+<body>
+<script>
+	var neu = [];
+	var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/studio/realtime/1m6h.json"
+		fetch(url)
+			.then(function(response){return response.json();})
+			.then(function(json){preload(json);})
+		function preload(old) {
+			console.log(old);
+			console.log(neu);
+			
+			update();
+			function update(){
+				var count = 0;
+				var interval = setInterval(function(){
+					count++;
+						var index = old.indexOf(old[count-1]);
+						if (index !== -1) {
+							old[index] = neu[count-1];
+						}			
+					// show updates
+					console.log("update "+count+"!")
+					console.log(old);
+					// console.log(old[count]);
+
+					// final array
+					if(count===old.length){
+						clearInterval(interval);
+						console.log("success!")
+						console.log(old);
+						//update(); to repeat?
+					}
+				}, 5000)	
+			}
+
+			var interval = setInterval(function(){
+				if(neu.length === old.length ){ 
+					clearInterval(interval);
+				}
+				loadneu();
+			}, 4000);
+
+	}
+
+	loadneu();
+	function loadneu(){
+		var url = "https://api.wheretheiss.at/v1/satellites/25544"
+		fetch(url)
+			.then(function(response){return response.json();})
+			.then(function(json){where(json);})
+		function where(data) {
+			var obj = {};
+			obj["nx"] = parseFloat(data.latitude.toFixed());
+			obj["ny"] = parseFloat(data.altitude.toFixed());
+			obj["nz"] = parseFloat(data.longitude.toFixed());
+			neu.push(obj);
+		}
+	}
+	
+
+</script>
+</body>
+</html>

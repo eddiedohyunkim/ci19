@@ -1,0 +1,258 @@
+<html>
+<head>
+<title>Iss draws!</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<style>
+	@font-face {
+		font-family: machina-rg;
+		src: url(assets/neuemachina/nmregular.otf);
+	}
+	@font-face {
+		font-family: machina-lt;
+		src: url(assets/neuemachina/nmlight.otf);
+	}
+	body {
+		color: #00000;
+		font-family: machina-rg;
+		background-color: #f0f0f0;
+		margin: 0;
+		overflow: hidden;
+		font-size: 3vw;
+	}
+	#lefttop {
+		position: absolute;
+		top: 15px;
+		left: 15px;
+		width: 50%;
+	}
+	#righttop{
+		position: absolute;
+		top: 15px;
+		right: 15px;
+		width: 50%;
+		text-align: right;
+	}
+	#open{cursor: pointer;}
+	.modal {
+		font-family: machina-lt;
+		display: none; 
+		position: fixed; 
+		z-index: 1; 
+		padding-top: 12vh; 
+		top:0px;
+		width: 100%; 
+		height: 100%; 
+		overflow: auto; 
+	}
+	.modalcontent {
+		background-color: #000000;
+		color: #ffffff;
+		margin: auto;
+		border: 1px solid #000000;
+		width: 70%;
+		height:70%;
+		box-shadow: 0 0 25px blue;
+	}
+	#modaltext{
+		margin: 20px;
+		word-wrap: break-word;
+	}
+	.close {
+		color: #606060;
+		float: right;
+		font-size: 28px;
+		font-weight: bold;
+		line-height: 15px;
+
+	}
+	.close:hover,
+	.close:focus {
+		color: #ffffff;
+		text-decoration: none;
+		cursor: pointer;
+	}
+	.label{
+		font-family: helvetica;
+		font-size: 10px;
+		color: #ffffff;
+		padding: 2px;
+		/*text-align: center;*/
+		background-color: rgba(0,0,0,0.6);
+	}
+
+</style>
+</head>
+<body>
+	<div id="container"></div>
+	<div id="lefttop">ISS DRAWS!</div>
+	<div id="righttop"><span id="open" style="text-decoration: underline;">?</span></div>
+
+	<div id="popup" class="modal">
+    	<div class="modalcontent">
+        	<span class="close">&times;</span>
+        	<p id="modaltext">
+				<a href="https://en.wikipedia.org/wiki/International_Space_Station" target="_"style="text-decoration: underline; color:#fff">ISS</a> is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030.
+        	</p>
+    	</div>
+	</div>
+	<script src="js/three.js"></script>
+	<script src="js/OrbitControls.js"></script>
+	<script src="js/CSS2DRenderer-zindexedited.js"></script>
+<script>
+	var container;
+	var d = 1000;
+	var load =[];
+	var x;
+	var y;
+	var z;
+	var camera, scene, renderer, labelRenderer;
+	var ARC_SEGMENTS = 5000;
+	var modal = document.getElementById("popup");
+	var btn = document.getElementById("open");
+	var closebtn = document.getElementsByClassName("close")[0];
+	btn.addEventListener("click", function(){modal.style.display = "block"}, false);
+	closebtn.addEventListener("click", function(){modal.style.display = "none"}, false);
+	window.addEventListener("click", function(event) {
+   		if (event.target == modal) {
+   	     	modal.style.display = "none";
+   	 	}
+	}, false);
+
+	init();
+	animate();
+	function init() {
+		container = document.getElementById("container");
+		scene = new THREE.Scene();
+		scene.position.set(0,-200,0);
+		scene.background = new THREE.Color(0xf0f0f0);
+		camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
+		camera.position.set(0,1200,1600);
+		scene.add(camera);
+		scene.add( new THREE.AmbientLight({color: 0x202020}));
+		var light = new THREE.SpotLight({color: 0xa0a0a0});
+		light.position.set(0,1000,0);
+		light.castShadow = true;
+		light.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(d/-2, d/2, d/2, d/-2,1,2000));
+		light.shadow.mapSize.width = 1500;
+		light.shadow.mapSize.height = 1500;
+		scene.add(light);
+
+		var planeGeometry = new THREE.PlaneBufferGeometry(1500,1500);
+		planeGeometry.rotateX(- Math.PI/2);
+		var planeMaterial = new THREE.ShadowMaterial({opacity: 0.3});
+		var plane = new THREE.Mesh(planeGeometry, planeMaterial);
+		plane.receiveShadow = true;
+		scene.add(plane);
+		var helper = new THREE.GridHelper(1500, 100, 0xd0d0d0, 0xd0d0d0);
+		scene.add(helper);
+
+		renderer = new THREE.WebGLRenderer({antialias: true});
+		renderer.setPixelRatio(window.devicePixelRatio);
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		renderer.shadowMap.enabled = true;
+		container.appendChild(renderer.domElement);
+
+		labelRenderer = new THREE.CSS2DRenderer();
+		labelRenderer.setSize(window.innerWidth, window.innerHeight);
+		labelRenderer.domElement.style.position = 'absolute';
+		labelRenderer.domElement.style.top = 0;
+		container.appendChild(labelRenderer.domElement);
+
+		var controls = new THREE.OrbitControls(camera);
+		var controls = new THREE.OrbitControls(light);
+		
+		//preload data
+		var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/studio/realtime/1m6h.json"
+		fetch(url)
+			.then(function(response){return response.json();})
+			.then(function(json){preload(json);})
+		function preload(data) {
+			console.log(data);
+			// create vector points
+			for(var i=0; i<data.length; i+=1){
+				x = data[i].x;
+				y = data[i].y;
+				z = data[i].z;
+				var vectors = new THREE.Vector3(x, y, z);
+				load.push(vectors);
+			}
+			console.log(load);
+
+			// create curves according to the vector points
+			var curve = new THREE.CatmullRomCurve3(load);
+			var points = curve.getPoints(data.length*20);
+			var geom = new THREE.BufferGeometry().setFromPoints(points);
+			var mat = new THREE.LineBasicMaterial({color:0x0000ff});
+			var curves = new THREE.Line(geom, mat);
+			curves.castShadow = true;
+			scene.add(curves);
+
+			// rainbow color gradient
+			var size = data.length;
+			var rainbow = new Array(size);
+			for (var i=0; i<size; i++) {
+				var red   = sin_to_hex(i, 0 * Math.PI * 2/3); // 0   deg
+				var blue  = sin_to_hex(i, 1 * Math.PI * 2/3); // 120 deg
+				var green = sin_to_hex(i, 2 * Math.PI * 2/3); // 240 deg
+				rainbow[i] = "#"+ red + green + blue;
+			}
+			function sin_to_hex(i, phase) {
+				var sin = Math.sin(Math.PI / size * 2 * i + phase);
+				var int = Math.floor(sin * 127) + 128;
+				var hex = int.toString(16);
+				return hex.length === 1 ? "0"+hex : hex;
+			}
+
+			// create start and end label
+			function lastupdate(){
+				var start = document.createElement("div");
+				start.className = "label";
+				start.textContent = "start";
+				var startL = new THREE.CSS2DObject(start);
+				startL.position.set(data[0].x, data[0].y, data[0].z);
+				scene.add(startL);
+
+				var end = document.createElement("div");
+				end.className = "label";
+				end.textContent = "update!";
+				var endL = new THREE.CSS2DObject(end);
+				endL.position.set(data[data.length-1].x, data[data.length-1].y, data[data.length-1].z);
+				scene.add(endL);
+			}
+			lastupdate();
+
+			// add rainbow spheres
+			for(var i = 0; i<data.length; i+=1){
+				x = data[i].x;
+				y = data[i].y;
+				z = data[i].z;
+				var geometry = new THREE.SphereGeometry( 10, 32, 32 );
+				var material = new THREE.MeshPhongMaterial( {color: rainbow[i]});
+				var sphere = new THREE.Mesh(geometry, material);
+				sphere.position.set(x, y, z);
+				sphere.castShadow = true;
+				scene.add(sphere);
+			}
+		}
+		window.addEventListener("resize",onWindowResize,false);
+	}
+	function onWindowResize() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		labelRenderer.setSize(window.innerWidth, window.innerHeight)
+		render();
+	}
+	function animate() {
+		requestAnimationFrame(animate);
+		render();
+
+	}
+	function render() {
+		renderer.render(scene, camera);
+		labelRenderer.render(scene, camera);
+	}
+</script>
+</body>
+</html>

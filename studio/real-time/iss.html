@@ -1,0 +1,72 @@
+<html>
+<title>iss</title>
+<body>
+<script>
+var sat = [ ["iss","25544"],
+["ses1","36516"],
+// ["noaa19","33591"],["goes13","29155"],["noaa15","25338"],["noaa18","28654"],["terra","25994"],["aqua","27424"],["metop-b","38771"],["suomi_npp","37849"] 
+];
+
+for(var i = 0; i<sat.length; i+=1){
+	var name = sat[i][0];
+	var stl = document.createElement("div");
+	var stlAlt = document.createElement("div");
+	var stlLat = document.createElement("div");
+	var stlLon = document.createElement("div");
+	var line = document.createElement("hr");
+	stl.setAttribute("id", name);
+	stlAlt.setAttribute("id", name+"alt");
+	stlLat.setAttribute("id", name+"lat");
+	stlLon.setAttribute("id", name+"lon");
+	stl.innerHTML = "<b>"+name+" coordinates</b>";
+	stlAlt.innerHTML = "Altitude: ";
+	stlLat.innerHTML = "Latitude: ";
+	stlLon.innerHTML = "Longitude: ";
+	document.body.appendChild(stl);
+	document.getElementById(name).appendChild(stlAlt);
+	document.getElementById(name).appendChild(stlLat);
+	document.getElementById(name).appendChild(stlLon);
+	document.body.appendChild(line);
+}
+
+// setInterval(function(){
+// 	// const removeElements = (elms) => elms.forEach(el => el.remove());
+// 	// for(var i = 0; i<sat.length; i+=1){
+// 	// 	let name = sat[i][0];
+// 	// 	removeElements( document.querySelectorAll("."+name+"result") );
+// 	// }
+// 	loop();
+// }, 360000);
+
+// function loop(){
+	for(var i = 0; i<sat.length; i+=1){
+		(function(index){
+			var name = sat[i][0];
+			var url = "https://www.n2yo.com/rest/v1/satellite/positions/"+sat[i][1]+"/0.000/0.000/	0/2/&apiKey=T9UGNG-T7NV6L-PFQ4R2-3ZHU"
+			fetch(url)
+				.then(function(response){return response.json();})
+				.then(function(json){where(json);})
+			function where(data) {
+				
+				console.log(data.info.transactionscount);
+				var alt = document.createElement("span");
+				var lat = document.createElement("span");
+				var lon = document.createElement("span");
+				alt.setAttribute("class", name+"result");
+				lat.setAttribute("class", name+"result");
+				lon.setAttribute("class", name+"result");
+				alt.innerHTML = parseFloat(data.positions[0].sataltitude.toFixed());
+				lat.innerHTML = parseFloat(data.positions[0].satlatitude.toFixed(4));
+				lon.innerHTML = parseFloat(data.positions[0].satlongitude.toFixed(4));
+				document.getElementById(name+"alt").appendChild(alt);
+				document.getElementById(name+"lat").appendChild(lat);
+				document.getElementById(name+"lon").appendChild(lon);
+			}
+		})(i);
+	}
+// }
+// loop();
+
+</script>
+</body>
+</html>

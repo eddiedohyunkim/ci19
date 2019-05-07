@@ -1,0 +1,21 @@
+<title></title>
+<body style="font-size: 100px;">
+<script>
+	threedots();
+	function threedots(){
+		var i = 0;
+		var interval = setInterval(function(){
+			var dot = document.createElement("span");
+			dot.innerHTML = ".";
+			document.body.appendChild(dot);
+			i++;
+			if(i === 3){
+				clearInterval(interval);
+				setTimeout(function() { 
+				}, 1000);
+			}
+		}, 1000);
+	}
+
+</script>
+</body>
