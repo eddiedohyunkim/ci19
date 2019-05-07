@@ -37,9 +37,9 @@
 		width: 50%;
 		text-align: right;
 	}
-	#open{cursor: pointer;}
-	#where{cursor: pointer;}
-	#where2{cursor: pointer;}
+	#btn1{cursor: pointer;}
+	#btn2{cursor: pointer;}
+	#btn3{cursor: pointer;}
 	#BEGIN{
 		position: fixed;
 		top: 20vh;
@@ -53,7 +53,7 @@
 		height:40%;
 		box-shadow: 0 0 25px blue;
 	}
-	.modal {
+	.modal,.modal2,.modal3 {
 		font-family: machina-lt;
 		display: none; 
 		position: fixed; 
@@ -63,30 +63,23 @@
 		width: 100%; 
 		height: 100%; 
 		overflow: auto; 
+	}
+	.modal {
+		padding-top: 12vh; 
+		width: 100%; 
+		height: 100%;  
 	}
 	.modal2 {
-		font-family: machina-lt;
-		display: none; 
-		position: fixed; 
-		z-index: 1; 
 		padding-top: 30vh; 
-		top:0px;
 		width: 100%; 
-		height: 100%; 
-		overflow: auto; 
+		height: 100%;  
 	}
 	.modal3 {
-		font-family: machina-lt;
-		display: none; 
-		position: fixed; 
-		z-index: 1; 
 		padding-top: 12vh; 
-		top:0px;
 		width: 100%; 
-		height: 100%; 
-		overflow: auto; 
+		height: 100%;  
 	}
-	.modalcontent {
+	.modalcontent,#modalcontent2,.modalcontent3{
 		background-color: #000000;
 		color: #ffffff;
 		margin: auto;
@@ -95,25 +88,19 @@
 		height:70%;
 		box-shadow: 0 0 25px blue;
 	}
+	.modalcontent {
+		width: 70%;
+		height:70%;
+	}
 	#modalcontent2{
-		background-color: #000000;
-		color: #ffffff;
-		margin: auto;
-		border: 1px solid #000000;
 		width: 40%;
-		height:22%;
+		height:33%;
 		text-align: center;
-		box-shadow: 0 0 25px blue;
 	}
 	.modalcontent3{
-		background-color: #000000;
-		color: #ffffff;
-		margin: auto;
 		padding: 20px;
-		border: 1px solid #000000;
 		width: 60%;
-		height:35%;
-		box-shadow: 0 0 25px blue;
+		height:40%;
 	}
 	#modaltext, #modaltext2{
 		margin: 20px;
@@ -129,7 +116,6 @@
 		font-size: 28px;
 		font-weight: bold;
 		line-height: 15px;
-
 	}
 	#close:hover,
 	#close:focus {
@@ -157,25 +143,22 @@
 		/*text-align: center;*/
 		background-color: rgba(0,0,0,0.6);
 	}
-
 </style>
 </head>
 <body>
 	<div id="container"></div>
 	<div id="lefttop" class="notyet">
-		ISS+<span id="where" style="text-decoration: underline;">&curren;</span>&nbsp;DRAWING!
+		ISS+<span id="btn2" style="text-decoration: underline;">&curren;</span>&nbsp;DRAWING!-<span style="font-size:2.8vw;">&#9608;</span>
 	</div>
 	<div id="righttop" class="notyet">
-		<span id="where2" style="text-decoration: underline;">&oplus;</span>
-		
-		<span id="open" style="text-decoration: underline;">?</span>
+		<span id="btn3" style="text-decoration: underline;">&oast;</span> <!-- &oplus; -->
+		<span id="btn1" style="text-decoration: underline;">?</span>
 	</div>
-	
 	<div id="popup" class="modal">
     	<div class="modalcontent">
         	<span id="close">&times;</span>
         	<p id="modaltext">
-				<a href="https://en.wikipedia.org/wiki/International_Space_Station" target="_"style="text-decoration: underline; color:#fff">ISS</a> is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The last pressurised module was fitted in 2011, and an experimental inflatable space habitat was added in 2016. The station is expected to operate until 2030.
+				The <a href="https://en.wikipedia.org/wiki/International_Space_Station" target="_"style="text-decoration: underline; color:#fff">ISS</a> is a space station, or a habitable artificial satellite, in low Earth orbit. Its first component was launched into orbit in 1998, with the first long-term residents arriving in November 2000. It has been inhabited continuously since that date. The station is expected to operate until 2030. *The ISS is the largest human-made body in low Earth orbit and can often be seen with the naked eye from Earth!
         	</p>
     	</div>
 	</div>
@@ -193,7 +176,6 @@
         	<p id="modaltext3">
         		Check out other locations&drawings!<br>
         		<p id="givecities"><p>
-				or <a href="https://eddiedohyunkim.github.io/ci19/studio/realtime/index.html"style="text-decoration: underline; color:#fff; margin:0px;">back to your location!<a>
         	</p>
     	</div>
 	</div>
@@ -208,6 +190,7 @@
 	var container;
 	var d = 1000;
 	var load = [];
+	var neu = [];
 	var x;
 	var y;
 	var z;
@@ -228,7 +211,7 @@
 	for(var i =0; i<cities.length; i+=1){
 		var link = document.createElement("a");
 		var comma = document.createElement("span");
-		link.setAttribute("href","https://eddiedohyunkim.github.io/ci19/studio/realtime/"+cities[i].city+".html");
+		link.setAttribute("href","https://eddiedohyunkim.github.io/ci19/studio/realtime/"+cities[i].city.toLowerCase()+".html");
 		link.setAttribute("target","_");
 		link.innerHTML= cities[i].city;
 		comma.innerHTML = " ";
@@ -237,31 +220,18 @@
 		document.getElementById("givecities").appendChild(link);
 		document.getElementById("givecities").appendChild(comma);
 	}
-
-	var modal = document.getElementById("popup");
-	var btn = document.getElementById("open");
-	var closebtn = document.getElementById("close");
-	btn.addEventListener("click", function(){modal.style.display = "block"}, false);
-	closebtn.addEventListener("click", function(){modal.style.display = "none"}, false);
-	window.addEventListener("click", function(event) {if (event.target == modal) {modal.style.display = "none";}
-	}, false);
-
-	var modal2 = document.getElementById("location");
-	var btn2 = document.getElementById("where");
-	var closebtn2 = document.getElementById("close2");
-	btn2.addEventListener("click", function(){modal2.style.display = "block"}, false);
-	closebtn2.addEventListener("click", function(){modal2.style.display = "none"}, false);
-	window.addEventListener("click", function(event) {if (event.target == modal2) {modal2.style.display = "none";}
-	}, false);
-
-	var modal3 = document.getElementById("otherloc");
-	var btn3 = document.getElementById("where2");
-	var closebtn3 = document.getElementById("close3");
-	btn3.addEventListener("click", function(){modal3.style.display = "block"}, false);
-	closebtn3.addEventListener("click", function(){modal3.style.display = "none"}, false);
-	window.addEventListener("click", function(event) {if (event.target == modal3) {modal3.style.display = "none";}
-	}, false);
-
+	var modals = [["popup", "btn1", "close"],["location", "btn2", "close2"],["otherloc", "btn3", "close3"]];
+	for(var i=0; i< modals.length; i+=1 ){
+		(function(index){
+			var modal = document.getElementById(modals[index][0]);
+			var btn = document.getElementById(modals[index][1]);
+			var closebtn = document.getElementById(modals[index][2]);
+			btn.addEventListener("click", function(){modal.style.display = "block"}, false);
+			closebtn.addEventListener("click", function(){modal.style.display = "none"}, false);
+			window.addEventListener("click", function(event) {if (event.target == modal) {modal.style.display = "none";}
+			}, false);
+		})(i);
+	}
 	function getLocation() {
 		navigator.geolocation.getCurrentPosition(showPosition);
 	}
@@ -271,12 +241,12 @@
 		var beginbox2 = document.getElementById("modaltext2");
 		beginbox.setAttribute("id","BEGIN");
 		beginbox.className = "userLocc";
-		userLat = position.coords.latitude;
-		userLon = position.coords.longitude;
-		// userLat = -25.2744;
-		// userLon = 133.7751;
+		// userLat = position.coords.latitude;
+		// userLon = position.coords.longitude;
+		userLat = 40.735409;
+		userLon = -73.994589;
 		beginbox.innerHTML = "Your coordinates<br><br>Latitude: "+parseFloat(userLat.toFixed(4))+"<br>Longitude: "+parseFloat(userLon.toFixed(4));
-		beginbox2.innerHTML = "Your coordinates<br>Latitude: "+parseFloat(userLat.toFixed(4))+"<br>Longitude: "+parseFloat(userLon.toFixed(4));
+		beginbox2.innerHTML = "Your coordinates<br>Latitude: "+parseFloat(userLat.toFixed(4))+"<br>Longitude: "+parseFloat(userLon.toFixed(4))+"<br><br><a href='https://www.google.com/search?q="+parseFloat(userLat.toFixed(4))+"%2C"+parseFloat(userLon.toFixed(4))+"'"+ "target = '_' style='color:#ffffff;'>Check if its correct!</a>";
 		timer();
 		document.body.appendChild(beginbox);
 		setTimeout(function() { 
@@ -284,25 +254,39 @@
 			animate();
 		}, 5000);
 	}
+	function threedots(){
+		var k = 0;
+		var interval = setInterval(function(){
+			k++;
+			var dot = document.createElement("span");
+			dot.innerHTML = ".";
+			document.getElementById("remove").appendChild(dot);
+			if(k === 3){ 
+   				clearInterval(interval);
+   			}
+		}, 300);
+	}
 	function timer(){
 		var c = 0;
 		var count = document.createElement("div");
-		count.className = "remove";
+		count.setAttribute("id","remove");
+
 		var interval = setInterval(function(){
 			c++;
-			count.innerHTML= "<br>Generating vectors "+(4-c)+"...";
+			count.innerHTML= "<br>Generating vectors";
+			document.getElementById("BEGIN").appendChild(count);
+			threedots();
 			if(c === 3){ 
    				clearInterval(interval);
    				setTimeout(function() { 
-   					const removeElements = (elms) => elms.forEach(el => el.remove());
-					removeElements( document.querySelectorAll(".remove") );
 					var getUserLocc = document.getElementById("BEGIN");
 					getUserLocc.style.display = "none";
    				}, 1000);
    			}
-   			document.getElementById("BEGIN").appendChild(count);
-		}, 1000);	
+		}, 1200);	
+		// threedots();
 	}
+
 	function init() {
 		var showTopLR = document.getElementsByClassName("notyet");
 		for(var i = 0; i<showTopLR.length; i+=1){
@@ -318,7 +302,7 @@
 		scene.add(camera);
 		scene.add( new THREE.AmbientLight({color: 0x202020}));
 		var light = new THREE.SpotLight({color: 0xa0a0a0});
-		light.position.set(50,1500,100);
+		light.position.set(50,2000,100);
 		light.penumbra = 0.5;
 		light.castShadow = true;
 
@@ -352,46 +336,79 @@
 		var controls = new THREE.OrbitControls(light);
 		
 		//preload vector points data
+
+		
 		var url = "https://raw.githubusercontent.com/eddiedohyunkim/ci19/master/studio/realtime/1m6h.json"
 		fetch(url)
 			.then(function(response){return response.json();})
 			.then(function(json){preload(json);})
-		function preload(data) {
-			console.log(data);
-			// create vector points
+		function preload(old) {
+			console.log(old);
+			console.log(neu);
+			
+			update();
+			function update(){
+				var count = 0;
+				var interval = setInterval(function(){
+					count++;
+						var index = old.indexOf(old[count-1]);
+						if (index !== -1) {
+							old[index] = neu[count-1];
+						}			
+					// show updates
+					console.log("update "+count+"!",old);
+
+						var total = 0;
+						for(var i = 0; i < neu.length; i++) {
+							total += neu[i].new_y;
+						}
+							var yavg = total / neu.length;
+							var nlo = userLon/5;
+							var nla = userLat/5;
+
+							var ran = [d/userLon/la,d/userLat/la];
+							var nx = neu[count-1]["new_x"]*ran[1]*neu[count-1]["new_x"]/nlo;
+							var ny = neu[count-1]["new_y"]-yavg+Math.floor(Math.random()*(yavg*2));
+							var nz = neu[count-1]["new_z"]*ran[1]/nla;
+							// create vector points /*too much computer burns out*/
+							// var vectors = new THREE.Vector3(nx, ny, nz);
+							// 	vectors.name = "point"
+							// load.push(vectors);
+							// add spheres
+							var geometry = new THREE.BoxGeometry( 20, 20, 20 );
+							var material = new THREE.MeshPhongMaterial( {color: 0x000000});
+							var cube = new THREE.Mesh(geometry, material);
+							cube.position.set(nx, ny, nz);
+							// cube.castShadow = true; /*too much computer burns out*/
+							cube.name = "cube";
+							scene.add(cube);
+
+					// final array
+					if(count===old.length){
+						clearInterval(interval);
+						console.log("success!")
+						console.log(old);
+					}
+				}, 11000)	
+			}
+
+			var interval = setInterval(function(){
+				if(neu.length === old.length ){ 
+					clearInterval(interval);
+				}
+				loadneu();
+				removespheres();						
+			}, 10000);
+
 			var total = 0;
-			for(var i = 0; i < data.length; i++) {
-			    total += data[i].y;
+			for(var i = 0; i < old.length; i++) {
+			    total += old[i].y;
 			}
-			var yavg = total / data.length;
-			console.log(yavg)
-
-			var lo = userLon/5;
-			var la = userLat/5;
-			ran = [d/userLon/la,d/userLat/la];
-			for(var i=0; i<data.length; i+=1){
-				x = data[i].x*ran[1]*data[i].x/lo;
-				y = data[i].y-yavg+Math.floor(Math.random()*(yavg*2));
-				z = data[i].z*ran[1]/la;
-				var vectors = new THREE.Vector3(x, y, z);
-				load.push(vectors);
-			}
-			console.log(load);
-
-			// create curves according to the vector points
-			var curve = new THREE.CatmullRomCurve3(load);
-			curve.curveType = 'centripetal';
-
-			var points = curve.getPoints(data.length*50);
-			var geom = new THREE.BufferGeometry().setFromPoints(points);
-			var mat = new THREE.LineBasicMaterial({color:0x0000ff, opacity: 0.5, transparent: true});
-			var curves = new THREE.Line(geom, mat);
-			curves.castShadow = true;
-			scene.add(curves);
-
-			/* rainbow color generator (thanks to Nikolay Nemshilov!) 
-			http://www.nikolay.rocks/2015-10-29-rainbows-generator-in-javascript */
-			var size = data.length;
+			var yavg = total / old.length;
+			console.log(yavg);
+			
+			/* rainbow color generator (thanks to Nikolay Nemshilov!) http://www.nikolay.rocks/2015-10-29-rainbows-generator-in-javascript */
+			var size = old.length;
 			var rainbow = new Array(size);
 			for (var i=0; i<size; i++) {
 				var red   = sin_to_hex(i, 0 * Math.PI * 2/3);
@@ -405,21 +422,64 @@
 				var hex = int.toString(16);
 				return hex.length === 1 ? "0"+hex : hex;
 			}
-
-			// add rainbow spheres
-			for(var i = 0; i<data.length; i+=1){
-				x = data[i].x*ran[1]*data[i].x/lo;
-				y = data[i].y-400+Math.floor(Math.random()*800);
-				z = data[i].z*ran[1]/la;
+			/********************************************************************/
+			
+			var lo = userLon/5;
+			var la = userLat/5;
+			var ran = [d/userLon/la,d/userLat/la];
+			for(var i=0; i<old.length; i+=1){
+				x = old[i].x*ran[1]*old[i].x/lo;
+				y = old[i].y-yavg+Math.floor(Math.random()*(yavg*2));
+				z = old[i].z*ran[1]/la;
+				// create vector points
+				var vectors = new THREE.Vector3(x, y, z);
+				load.push(vectors);
+				// add spheres
 				var geometry = new THREE.SphereGeometry( 10, 32, 32 );
 				var material = new THREE.MeshPhongMaterial( {color: rainbow[i]});
 				var sphere = new THREE.Mesh(geometry, material);
 				sphere.position.set(x, y, z);
 				sphere.castShadow = true;
+				sphere.name = "sphere";
 				scene.add(sphere);
 			}
+			console.log(load);
+
+			// create curves
+			var curve = new THREE.CatmullRomCurve3(load);
+			var points = curve.getPoints(old.length*50);
+			var geom = new THREE.BufferGeometry().setFromPoints(points);
+			var mat = new THREE.LineBasicMaterial({color:0x0000ff, opacity: 0.5, transparent: true});
+			var curves = new THREE.Line(geom, mat);
+			curves.castShadow = true;
+			scene.add(curves);
+
+		} //end of preload 
+		
+		function removespheres(object) {
+    		var selectedObject = scene.getObjectByName("sphere");
+    		scene.remove( selectedObject );
+    		selectedObject.geometry.dispose();
+			selectedObject.material.dispose();
+    		animate();
 		}
+	
+		
 		window.addEventListener("resize",onWindowResize,false);
+	} //end of init
+	function loadneu(){
+			var url = "https://api.wheretheiss.at/v1/satellites/25544"
+			fetch(url)
+				.then(function(response){return response.json();})
+				.then(function(json){where(json);})
+			function where(data) {
+				var i =0;
+				var obj = {};
+				obj["new_x"] = parseFloat(data.latitude.toFixed());
+				obj["new_y"] = parseFloat(data.altitude.toFixed());
+				obj["new_z"] = parseFloat(data.longitude.toFixed());
+				neu.push(obj);
+			}
 	}
 	function onWindowResize() {
 		camera.aspect = window.innerWidth / window.innerHeight;

@@ -234,24 +234,37 @@
 			animate();
 		}, 5000);
 	}
+	function threedots(){
+		var k = 0;
+		var interval = setInterval(function(){
+			k++;
+			var dot = document.createElement("span");
+			dot.innerHTML = ".";
+			document.getElementById("remove").appendChild(dot);
+			if(k === 3){ 
+   				clearInterval(interval);
+   			}
+		}, 300);
+	}
 	function timer(){
 		var c = 0;
 		var count = document.createElement("div");
-		count.className = "remove";
+		count.setAttribute("id","remove");
+
 		var interval = setInterval(function(){
 			c++;
-			count.innerHTML= "<br>Generating vectors "+(4-c)+"...";
+			count.innerHTML= "<br>Generating vectors";
+			document.getElementById("BEGIN").appendChild(count);
+			threedots();
 			if(c === 3){ 
    				clearInterval(interval);
    				setTimeout(function() { 
-   					const removeElements = (elms) => elms.forEach(el => el.remove());
-					removeElements( document.querySelectorAll(".remove") );
 					var getUserLocc = document.getElementById("BEGIN");
 					getUserLocc.style.display = "none";
    				}, 1000);
    			}
-   			document.getElementById("BEGIN").appendChild(count);
-		}, 1000);	
+		}, 1200);	
+		// threedots();
 	}
 	function init() {
 		var showTopLR = document.getElementsByClassName("notyet");
@@ -269,7 +282,7 @@
 		scene.add(camera);
 		scene.add( new THREE.AmbientLight({color: 0x202020}));
 		var light = new THREE.SpotLight({color: 0xa0a0a0});
-		light.position.set(50,1500,100);
+		light.position.set(50,2000,100);
 		light.penumbra = 0.5;
 		light.castShadow = true;
 
@@ -315,24 +328,51 @@
 			    total += data[i].y;
 			}
 			var yavg = total / data.length;
-			console.log(yavg)
-
+			console.log(yavg);
+			
+			/* rainbow color generator (thanks to Nikolay Nemshilov!) */
+			/* http://www.nikolay.rocks/2015-10-29-rainbows-generator-in-javascript */
+				var size = data.length;
+				var rainbow = new Array(size);
+				for (var i=0; i<size; i++) {
+					var red   = sin_to_hex(i, 0 * Math.PI * 2/3);
+					var blue  = sin_to_hex(i, 1 * Math.PI * 2/3);
+					var green = sin_to_hex(i, 2 * Math.PI * 2/3);
+					rainbow[i] = "#"+ red + green + blue;
+				}
+				function sin_to_hex(i, phase) {
+					var sin = Math.sin(Math.PI / size * 2 * i + phase);
+					var int = Math.floor(sin * 127) + 128;
+					var hex = int.toString(16);
+					return hex.length === 1 ? "0"+hex : hex;
+				}
+			/********************************************************************/
+			
 			var lo = userLon/5;
 			var la = userLat/5;
-			ran = [d/userLon/la,d/userLat/la];
+			var ran = [d/userLon/la,d/userLat/la];
 			for(var i=0; i<data.length; i+=1){
 				x = data[i].x*ran[1]*data[i].x/lo;
 				y = data[i].y-yavg+Math.floor(Math.random()*(yavg*2));
 				z = data[i].z*ran[1]/la;
+				// create vector points
 				var vectors = new THREE.Vector3(x, y, z);
+					// vectors.name = "point"
 				load.push(vectors);
+				// add spheres
+				var geometry = new THREE.SphereGeometry( 10, 32, 32 );
+				var material = new THREE.MeshPhongMaterial( {color: rainbow[i]});
+				var sphere = new THREE.Mesh(geometry, material);
+				sphere.position.set(x, y, z);
+				sphere.castShadow = true;
+				sphere.name = "sphere";
+				scene.add(sphere);
 			}
 			console.log(load);
 
-			// create curves according to the vector points
+			// create curves
 			var curve = new THREE.CatmullRomCurve3(load);
 			curve.curveType = 'centripetal';
-
 			var points = curve.getPoints(data.length*50);
 			var geom = new THREE.BufferGeometry().setFromPoints(points);
 			var mat = new THREE.LineBasicMaterial({color:0x0000ff, opacity: 0.5, transparent: true});
@@ -340,36 +380,7 @@
 			curves.castShadow = true;
 			scene.add(curves);
 
-			/* rainbow color generator (thanks to Nikolay Nemshilov!) 
-			http://www.nikolay.rocks/2015-10-29-rainbows-generator-in-javascript */
-			var size = data.length;
-			var rainbow = new Array(size);
-			for (var i=0; i<size; i++) {
-				var red   = sin_to_hex(i, 0 * Math.PI * 2/3);
-				var blue  = sin_to_hex(i, 1 * Math.PI * 2/3);
-				var green = sin_to_hex(i, 2 * Math.PI * 2/3);
-				rainbow[i] = "#"+ red + green + blue;
-			}
-			function sin_to_hex(i, phase) {
-				var sin = Math.sin(Math.PI / size * 2 * i + phase);
-				var int = Math.floor(sin * 127) + 128;
-				var hex = int.toString(16);
-				return hex.length === 1 ? "0"+hex : hex;
-			}
-
-			// add rainbow spheres
-			for(var i = 0; i<data.length; i+=1){
-				x = data[i].x*ran[1]*data[i].x/lo;
-				y = data[i].y-400+Math.floor(Math.random()*800);
-				z = data[i].z*ran[1]/la;
-				var geometry = new THREE.SphereGeometry( 10, 32, 32 );
-				var material = new THREE.MeshPhongMaterial( {color: rainbow[i]});
-				var sphere = new THREE.Mesh(geometry, material);
-				sphere.position.set(x, y, z);
-				sphere.castShadow = true;
-				scene.add(sphere);
-			}
-		}
+		} //end of preload 
 		window.addEventListener("resize",onWindowResize,false);
 	}
 	function onWindowResize() {
