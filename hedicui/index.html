@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+	/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+@font-face {
+		font-family: cirka;
+		src: url(assets/cirka-light.otf);
+	}
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	font-family: cirka;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+html {
+  scroll-behavior: smooth;
+ }
+ol.carousel-indicators {
+   position: absolute;
+   bottom: 5px;
+   margin: 0;
+   left: 0;
+   right: 0;
+   width: auto;
+}
+
+ol.carousel-indicators li,
+ol.carousel-indicators li.active {
+   width: 0.7rem;
+   height: 0.7rem;
+   margin: 0;
+   padding: 0;
+   border-radius: 50%;
+   border: 0;
+   background: transparent;
+}
+
+ol.carousel-indicators li {
+   background: rgba(255,255,255,0.39);
+   margin-left: .25rem;
+   margin-right: .25rem;
+}
+
+ol.carousel-indicators li.active {
+   background: white;
+  /* margin-left: .5rem;
+   margin-right: .5rem;*/
+}
+.content {
+  background: rgba(255, 255, 255, 0) linear-gradient(to bottom, rgba(0, 0, 0, 0) 10%, rgba(255, 255, 255, .1) 40%, rgba(255, 255, 255, .5) 75%, rgba(255, 255, 255, 1) 100%) repeat scroll 0 0;
+  position: relative;
+  padding-top: 160vh;
+  height: 20vh;
+  z-index: 0;
+}
+hr{
+
+}
+
+</style>
+<title>HEDI CUI</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div id="intro" style="width: 100%; height: 160vh; cursor: pointer;" onClick="document.getElementById('intro2').scrollIntoView();">
+		<div style=" display: block; position: absolute; vertical-align: center; color: #ffffff; width: 100%; text-align: center; font-size: 20vw; cursor: pointer;">HEDI CUI</div>
+		<img src="img/cover.jpg" style=" display: inline-block; float:left;width:100%;height:100%;object-fit:cover; background: ">
+		<div class="content"></div>
+	</div>
+	<div id="intro2" style="width: 100%; height: 130vh; cursor: pointer;" onClick="document.getElementById('containerid').scrollIntoView();">
+		<div style=" display: block; position: relative; color: #000000; width: 100%; text-align: center; font-size: 10vw; padding-top:20vh;line-height: 8vw; ">UNRAVELING THE TRUE SELVES, DISCOVERING THE YOU: NONAME</div>
+	</div>
+
+	<div id="containerid" class="container" style="height: 100vh;  padding-top:8vh;  margin-bottom: 20vh; width: 100%;">
+  		  
+		<div id="myCarousel" class="carousel slide" data-ride="carousel">
+    	<!-- Indicators -->
+    		<ol class="carousel-indicators">
+     			<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+     			<li data-target="#myCarousel" data-slide-to="1"></li>
+     			<li data-target="#myCarousel" data-slide-to="2"></li>
+     			<li data-target="#myCarousel" data-slide-to="3"></li>
+     			<li data-target="#myCarousel" data-slide-to="4"></li>
+     			<li data-target="#myCarousel" data-slide-to="5"></li>
+     			<li data-target="#myCarousel" data-slide-to="6"></li>
+     			<li data-target="#myCarousel" data-slide-to="7"></li>
+     			<li data-target="#myCarousel" data-slide-to="8"></li>
+     			<li data-target="#myCarousel" data-slide-to="9"></li>
+     			<li data-target="#myCarousel" data-slide-to="10"></li>
+     			<li data-target="#myCarousel" data-slide-to="11"></li>
+     			<li data-target="#myCarousel" data-slide-to="12"></li>
+     			<li data-target="#myCarousel" data-slide-to="13"></li>
+     			<li data-target="#myCarousel" data-slide-to="14"></li>
+     			<li data-target="#myCarousel" data-slide-to="15"></li>
+     			<li data-target="#myCarousel" data-slide-to="16"></li>
+     			<li data-target="#myCarousel" data-slide-to="17"></li>
+
+    		</ol>
+
+    <!-- Wrapper for slides -->
+    		<div class="carousel-inner">
+     			<div class="item active">
+        			<img src="img/hedi-100.jpg" style="height:85vh; margin: auto">
+      			</div>
+
+      			<div class="item">
+        			<img src="img/hedi-103.jpg" style="height:85vh; margin: auto">
+      			</div>
+    
+      			<div class="item">
+        			<img src="img/hedi-104.jpg" style="height:85vh; margin: auto">
+      			</div>
+
+      			<div class="item">
+        			<img src="img/hedi-106.jpg" style="height:85vh; margin: auto">
+      			</div>
+    
+      			<div class="item">
+        			<img src="img/hedi-7.jpg" style="height:85vh; margin: auto">
+      			</div>
+
+      			<div class="item">
+        			<img src="img/hedi-48.jpg" style="height:85vh; margin: auto">
+      			</div>
+    
+      			<div class="item">
+        			<img src="img/hedi-109-2.jpg" style="height:85vh; margin: auto">
+      			</div>
+
+      			<div class="item">
+        			<img src="img/hedi-17.jpg" style="height:85vh; margin: auto">
+      			</div>
+    
+      			<div class="item">
+        			<img src="img/hedi-32.jpg" style="height:85vh; margin: auto">
+      			</div>
+
+      			<div class="item">
+        			<img src="img/hedi-24.jpg" style="height:85vh; margin: auto">
+      			</div>
+    
+      			<div class="item">
+        			<img src="img/hedi-22.jpg" style="height:85vh; margin: auto">
+      			</div>
+
+      			<div class="item">
+        			<img src="img/hedi-36.jpg" style="height:85vh; margin: auto">
+      			</div>
+    
+      			<div class="item">
+        			<img src="img/hedi-51.jpg" style="height:85vh; margin: auto">
+      			</div>
+
+      			<div class="item">
+        			<img src="img/hedi-87.jpg" style="height:85vh; margin: auto">
+      			</div>
+    
+      			<div class="item">
+        			<img src="img/hedi-93.jpg" style="height:85vh; margin: auto">
+      			</div>
+
+      			<div class="item">
+        			<img src="img/hedi-109.jpg" style="height:85vh; margin: auto">
+      			</div>
+
+      			<div class="item">
+        			<img src="img/hedi-54.jpg" style="height:85vh; margin: auto">
+      			</div>
+    
+      			<div class="item">
+        			<img src="img/hedi-82.jpg" style="height:85vh; margin: auto">
+      			</div>
+    		</div>
+
+    <!-- Left and right controls -->
+    		<a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev" style="background:transparent !important">
+      			<span class="glyphicon glyphicon-chevron-left" style="font-size: 2vw;"></span>
+      			<span class="sr-only">Previous</span>
+    		</a>
+    		<a class="right carousel-control" href="#myCarousel" role="button" data-slide="next" style="background:transparent !important">
+     			<span class="glyphicon glyphicon-chevron-right" style="font-size: 2vw;"></span>
+      			<span class="sr-only">Next</span>
+    		</a>
+  		</div>
+	</div>
+	<div id = "images" style=" display: flex; justify-content: center; align-items: center; flex-wrap: wrap" onClick="document.querySelector('img').scrollIntoView();">
+		<img src="img/hedi-51.jpg" style=" height: 100vh; ;margin-bottom: 1%; object-fit:cover;">	
+		<img src="img/hedi-100.jpg" style=" width: 31%; margin: 1%;">	
+    	<img src="img/hedi-103.jpg" style=" width: 31%; margin: 1%;">
+    	<img src="img/hedi-104.jpg" style=" width: 31%; margin: 1%;">	
+    	<img src="img/hedi-106.jpg" style=" width: 31%; margin: 1%;">
+    	<img src="img/hedi-7.jpg" style=" width: 31%; margin: 1%;">	
+    	<img src="img/hedi-48.jpg" style=" width: 31%; margin: 1%;">
+    	<img src="img/hedi-109-2.jpg" style=" width: 31%; margin: 1%;">	
+    	<img src="img/hedi-17.jpg" style=" width: 31%; margin: 1%;">
+    	<img src="img/hedi-32.jpg" style=" width: 31%; margin: 1%;">	
+    	<img src="img/hedi-24.jpg" style=" width: 31%; margin: 1%;">
+    	<img src="img/hedi-22.jpg" style=" width: 31%; margin: 1%;">	
+    	<img src="img/hedi-36.jpg" style=" width: 31%; margin: 1%;">
+    	
+    	<img src="img/hedi-87.jpg" style=" width: 31%; margin: 1%;">
+    	<img src="img/hedi-93.jpg" style=" width: 31%; margin: 1%;">	
+    	<img src="img/hedi-109.jpg" style=" width: 31%; margin: 1%;">	
+    	<img src="img/hedi-54.jpg" style=" width: 31%; margin: 1%;">
+    	<img src="img/hedi-82.jpg" style=" width: 31%; margin: 1%;">
+	</div>
+	<hr style="margin: 1.5vw; border: 0.5px solid #c0c0c0">
+	<p style=" font-size: 1vw; margin: 1.5vw; font-family: helvetica"> &copy; Copyright 2019 HEDI CUI
+	</p>
+</body>
+</html>
