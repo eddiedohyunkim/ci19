@@ -1,7 +1,21 @@
 <title></title>
 <body style="font-size: 100px;">
 <script>
-	threedots();
+	timer();
+	function timer(){
+		var c = 0;
+		var interval = setInterval(function(){
+			c++;
+			threedots();
+			if(c === 3){ 
+   				clearInterval(interval);
+   				console.log("done!");
+   			}
+		}, 1200);	
+		// threedots();
+	}
+
+	// threedots();
 	function threedots(){
 		var i = 0;
 		var interval = setInterval(function(){
@@ -11,10 +25,12 @@
 			i++;
 			if(i === 3){
 				clearInterval(interval);
+				const removeElements = (elms) => elms.forEach(el => el.remove());
 				setTimeout(function() { 
-				}, 1000);
+					removeElements( document.querySelectorAll("span") );
+				}, 300);
 			}
-		}, 1000);
+		}, 300);
 	}
 
 </script>
