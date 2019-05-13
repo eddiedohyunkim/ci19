@@ -1,0 +1,117 @@
+<html>
+	<title>Google fonts calendar</title>
+<style>
+html, body{height: 100%;}
+body{
+	margin: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+div{font-size: 40vmin;}
+#trigger{
+	position:fixed;
+	top:10px;
+	left:10px;
+}
+audio{display:none;} 
+</style>
+<body>
+	<div id="trigger"></div>
+	<audio controls autoplay id="aud">
+		<source src="assets/click2.mp3" type="audio/mpeg">
+	</audio>
+	<div id="time"></div>
+<script>
+var url = "https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyDpMWnuzdI4HjGEeT1G8fXvpQOr986ydrg"
+fetch(url)
+	.then(function(response){return response.json();})
+	.then(function(json){typer(json);})
+function typer(data) {
+	var button = document.createElement("input");
+	button.setAttribute("id","onoff");
+	button.setAttribute("type","button");
+	button.setAttribute("value", "effect!");
+	document.getElementById("trigger").appendChild(button);
+	var winbut = document.createElement("button");
+	winbut.setAttribute("id","onoff");
+	winbut.innerHTML = "save this time!";
+	document.getElementById("trigger").appendChild(winbut);
+
+	button.onclick = function onoff() {
+	  	currentvalue = document.getElementById('onoff').value;
+	  	if(currentvalue ==  "effect!"){
+	   		document.getElementById("onoff").value = "regular";
+	  	}else{
+	   		document.getElementById("onoff").value = "effect!";
+		}
+	}
+	winbut.onclick = function newwindow() {
+		var now = new Date();	
+		var myWindow = window.open("", "", "width="+screen.width+", height="+screen.height);
+		var newdiv = myWindow.document.createElement("div");
+		myWindow.document.body.appendChild(newdiv);
+		newdiv.innerHTML =now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+		newdiv.style.fontSize = "40vmin";
+	  	myWindow.document.body.style.margin = "0";
+	  	myWindow.document.body.style.display = "flex";
+	  	myWindow.document.body.style.justifyContent = "center";
+	  	myWindow.document.body.style.alignItems = "center";
+	
+	}
+	var aud = document.getElementById("aud");
+	setInterval(function(){
+	const removeElements = (elms) => elms.forEach(el => el.remove());
+	removeElements(document.querySelectorAll("span"));
+	removeElements(document.querySelectorAll("link"));
+	aud.load();
+	time();
+	}, 1000);
+	
+	function time(){
+		var now = new Date();
+		var hour = document.createElement("span");
+		var min = document.createElement("span");
+		var sec = document.createElement("span");
+		var hm = document.createElement("span");
+		var ms = document.createElement("span");
+		hour.innerHTML = now.getHours();
+		min.innerHTML = now.getMinutes();
+		sec.innerHTML = now.getSeconds();
+		hm.innerHTML = ":";
+		ms.innerHTML = ":";
+		document.getElementById("time").appendChild(hour);
+		document.getElementById("time").appendChild(hm);
+		document.getElementById("time").appendChild(min);
+		document.getElementById("time").appendChild(ms);
+		document.getElementById("time").appendChild(sec);	
+
+		for(var i = 0; i<5; i+=1){
+			var font = data.items[ Math.floor(Math.random()*data.items.length) ];
+			var fontLink = document.createElement("link");
+			fontLink.setAttribute("rel", "stylesheet");
+			fontLink.setAttribute("href", "https://fonts.googleapis.com/css?family=" + font.family);
+			document.head.appendChild(fontLink);
+			var all = document.querySelectorAll("span");
+			let nums = all[i];
+			nums.style.fontFamily = font.family +", " + font.category;
+			if (document.getElementById("onoff").value == "regular"){
+				const randomcolor = "rgb("+Math.round(Math.random()*255)+", "+Math.round(Math.random()*255)+", "+Math.round(Math.random()*255)+")";
+				// if(hour.innerHTML==="11"){
+				// 	var hey = -25+"px "+-20+"px "+20+"px "+randomcolor;
+				// 	nums.style.textShadow = hey;
+				// } else{
+					var txtShadow = 1+"px "+10+"px "+20+"px "+randomcolor;
+					nums.style.textShadow = txtShadow;
+				// }
+				
+			}
+		}
+	}
+	time();
+}		
+//"rgb("+Math.round(Math.random()*255)+", "+Math.round(Math.random()*255)+", "+Math.round(Math.random()*255)+")"
+</script>
+</body>
+</html>
+

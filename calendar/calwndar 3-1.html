@@ -1,0 +1,95 @@
+<html>
+	<title>calendar</title>
+<style>
+	html,body{
+		margin: 0;
+	} 
+	body{
+		width: 99vw;
+		padding: 0.5vw;
+		overflow-x: hidden;
+	}
+	#container{
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+	}
+	video, img{
+		display: inline-block;
+	}
+	video{
+		width: 33.3333vw;
+	}
+</style>
+<body>
+<div id="container">
+	<div>
+    	<video autoplay></video>
+    	<div id="now"></div>
+	</div>
+</div>
+<script>
+	var now;
+	var i = 2;
+	var k = 0;
+	const screenshotButton = document.querySelector("#screenshot-button");
+	const video = document.querySelector("video");
+	const body = document.body;
+
+	navigator.mediaDevices.getUserMedia({video: true})
+		.then((stream) => {document.querySelector("video").srcObject = stream})
+		.then(time)
+
+	function time(){
+		count();
+		setInterval(function(){
+		count();
+		}, 1000);
+	}	
+	function count(){
+		now = new Date();
+		document.getElementById("now").innerHTML= now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+	}
+
+
+	body.onclick = function(){
+		var interval = setInterval(function(){
+			i++;
+			k++
+			if(k === 300){clearInterval(interval);}
+			capture();
+			document.body.scrollIntoView(false);
+		}, 100);
+	}
+	
+	function capture() {
+		// i++;
+		console.log(i);
+		console.log("this is k " +k);
+		var canvas = document.createElement("canvas");
+		canvas.width = video.videoWidth;
+		canvas.height = video.videoHeight;
+		canvas.getContext("2d").drawImage(video, 0, 0);
+		// block
+		var block = document.createElement("div");
+		block.setAttribute("id", "block"+k);
+		// img
+		var screenshot = document.createElement("img");
+		screenshot.setAttribute("src", canvas.toDataURL("image/webp") );
+		screenshot.setAttribute("id", "img"+k);
+		document.getElementById("container").appendChild(block);
+		document.getElementById("block"+k).appendChild(screenshot); 
+		// block width
+		var max = 100 / (i+1);
+		document.getElementById("img"+k).style.width = max+"vw";
+
+		// time
+		now = new Date();	
+		var time = document.createElement("div");
+		time.innerHTML =now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+		document.getElementById("block"+k).appendChild(time);
+	};
+
+</script>
+</body>
+</html>

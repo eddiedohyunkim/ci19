@@ -1,0 +1,71 @@
+<html>
+	<title>calendar</title>
+<style>
+	html,body{
+		margin: 0;
+	} 
+	body{
+		width: 99vw;
+		padding: 0.5vw;
+		overflow-x: hidden;
+	}
+	#container{
+		width: 100%;
+		display: flex;
+		flex-wrap: wrap;
+	}
+	img{
+		display: inline-block;
+		width: 9.9vw;
+	}
+</style>
+<body>
+<div id="container">
+	<div>
+    	<div id="now"></div>
+	</div>
+</div>
+<script>
+	var now;
+	// var i = 2;
+	var k = 0;
+	const screenshotButton = document.querySelector("#screenshot-button");
+	const video = document.createElement("video");
+	video.setAttribute("autoplay","");
+	const body = document.body;
+
+	navigator.mediaDevices.getUserMedia({video: true})
+		.then((stream) => {video.srcObject = stream});
+
+	body.onclick = function(){
+		var interval = setInterval(function(){
+			k++
+			if(k === 100){clearInterval(interval);}
+			capture();
+		}, 1000);
+	}
+	
+	function capture() {
+
+		var canvas = document.createElement("canvas");
+		canvas.width = video.videoWidth;
+		canvas.height = video.videoHeight;
+		canvas.getContext("2d").drawImage(video, 0, 0);
+		// block
+		var block = document.createElement("div");
+		block.setAttribute("id", "block"+k);
+		// img
+		var screenshot = document.createElement("img");
+		screenshot.setAttribute("src", canvas.toDataURL("image/jpg") );
+		screenshot.setAttribute("id", "img"+k);
+		document.getElementById("container").appendChild(block);
+		document.getElementById("block"+k).appendChild(screenshot); 
+
+		var time = document.createElement("div");
+		time.innerHTML =k;
+		document.getElementById("block"+k).appendChild(time);
+	};
+
+</script>
+</body>
+</html>

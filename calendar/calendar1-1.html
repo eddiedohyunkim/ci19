@@ -1,0 +1,56 @@
+<html>
+	<title>calendar</title>
+	<style>
+html, body{
+	height: 100%;
+}
+body{
+	margin: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+div{
+	/* either vw or vh, whichever is smaller*/
+	font-size: 40vmin;
+}
+#newwindow{
+	background-color: "red";
+}
+
+</style>
+<body>
+	<div id="time"></div>
+<script>
+
+setInterval(function(){
+time();
+}, 1000);
+setInterval(function(){
+message();
+}, 3000);
+
+function time(){
+	var now = new Date();
+	document.getElementById("time").innerHTML= now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+}
+time();
+
+function message(){
+	var now = new Date();	
+	var myWindow = window.open("", "", "width="+screen.width+", height="+screen.height);
+	var newdiv = myWindow.document.createElement("div");
+	myWindow.document.body.appendChild(newdiv);
+	newdiv.innerHTML =now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+	newdiv.style.fontSize = "40vmin";
+  	myWindow.document.body.style.margin = "0";
+  	myWindow.document.body.style.display = "flex";
+  	myWindow.document.body.style.justifyContent = "center";
+  	myWindow.document.body.style.alignItems = "center";
+
+}
+message();
+
+</script>
+</body>
+</html>

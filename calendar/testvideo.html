@@ -1,0 +1,43 @@
+<html>
+	<title></title>
+<body>
+    <img src="cat.jpg" class="hey" id="cat" width="600">
+
+</div>
+<script>
+
+var imgs = document.querySelectorAll("img");
+const video = document.createElement("video");
+video.setAttribute("autoplay","");
+// document.body.appendChild(video);
+
+navigator.mediaDevices.getUserMedia({video: true})
+.then((stream) => {video.srcObject = stream})
+// .then(capture);
+
+document.body.onclick = function(){
+	capture();
+}
+
+
+function capture(){
+	const canvas = document.createElement("canvas");
+	canvas.width = video.videoWidth;
+	canvas.height = video.videoHeight;
+	canvas.getContext("2d").drawImage(video, 0, 0);
+	var file = canvas.toDataURL("image/webp");
+	console.log(file);
+	// img
+		
+	for(var i =0; i<imgs.length; i+=1){
+		 // imgs[i].className += " class2";
+		imgs[i].src = file;
+	}
+	
+	
+}
+
+
+</script>
+</body>
+</html>
