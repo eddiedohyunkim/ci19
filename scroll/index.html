@@ -1,0 +1,62 @@
+<html>
+	<title>$100 scroll</title>
+<style>
+	#money, .moneys{
+		display: block;
+		width:589.44px;
+		margin: auto;
+	}
+	#moneyMobile{
+		display: none;
+	}
+	#price{
+		position: fixed;
+		top: 5px;
+	}
+	@media only screen and (max-width: 600px) {
+		#money{
+			display: none;
+		}
+		#moneyMobile, .moneysMobile{
+			display: block;
+			height: 100vh;
+			margin: auto;
+		}
+	}
+
+</style>
+<body style = "height: 200vh;">
+	<img id = "money" src="100bill.jpg">
+	<img id = "moneyMobile" src="100bill_mobile.jpg">
+	<div id = "price">$100</div>	
+<script>
+	var x = document.getElementById('money');
+	if(window.innerWidth<600){
+		var x = document.getElementById('moneyMobile');
+	}
+	x.onload = function(){
+		window.onscroll = function() {
+			var scrollHeight = document.body.scrollTop || document.documentElement.scrollTop;
+			var y = Math.floor(scrollHeight/x.height);
+			var price = document.getElementById('price');
+			price.innerHTML = '$'+(y+1)*100;  
+			var image = document.createElement('img');
+			image.src = '100bill.jpg';
+			image.className = 'moneys';
+			if(window.innerWidth<600){
+				image.src = '100bill_mobile.jpg';
+				image.className = 'moneysMobile'
+			}
+			document.body.appendChild(image);
+			if(y == 0){
+				const removeElements = (elms) => elms.forEach(el => el.remove());
+				removeElements( document.querySelectorAll('.moneys') );
+				if(window.innerWidth<600){
+					removeElements( document.querySelectorAll('.moneysMobile') );
+				}
+			}
+		}
+	}
+</script>
+</body>
+</html>
