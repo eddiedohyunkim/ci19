@@ -1,0 +1,117 @@
+<html>
+<head>
+	<title>random user</title>
+</head>
+<style>
+	@font-face {
+ 		font-family: neue-regular;
+  		src: url(neue_regular.otf);
+	}
+	@font-face {
+ 		font-family: neue-wide;
+  		src: url(neue_display_wide.otf);
+	}
+	@font-face {
+ 		font-family: neue-reg-wide;
+  		src: url(neue_reg_wide.otf);
+	}
+	#card{
+		width: 242px;
+		height: 383px;
+		border-radius: 13px;
+		background-color: #E82E21;
+	}
+	#img{
+		width:110px;
+		height: 133px;
+		object-fit: cover;
+		position: relative;
+		top: 118px;
+		left: 113px;
+	}
+	#nNo{
+		font-family: neue-regular;
+		font-size: 16px;
+		position: relative;
+		top: 78px;
+		left: 113px;
+	}
+	#name{
+		font-family: neue-wide;
+		font-size: 20px;
+		line-height: 23px;
+		transform: rotate(270deg);
+		position: relative;
+		top: -3px;
+		left: -30px;
+	}
+	#logo{
+		width: 500px;
+		object-fit: cover;
+		transform: rotate(270deg);
+		position: absolute;
+		top: 100px;
+		left: -200px;
+	}
+	#position{
+		font-family: neue-reg-wide;
+		color: #FFFFFF;
+		font-size: 11px;
+		position: relative;
+		transform: rotate(270deg);
+		top: -50px;
+		left: -45px;
+
+	}
+	#container{
+		display: block;
+		/*margin: 500px;*/
+	}
+</style>
+<body>
+<div id= 'container'>
+	<div id='card'>
+		<img id='logo' src= 'logo-parsons.png'>
+		<div id='position'></div>
+		<img style=''id ='img' src= ''>
+		<div id='name'></div>
+		<div id='nNo'></div>
+	</div>
+</div>
+	
+<script>
+	var url = 'https://randomuser.me/api/?nat=AU,BR,CA,CH,DE,DK,ES,FI,FR,GB,IE,NO,NL,NZ,TR,US'
+			fetch(url)
+				.then(function(response){return response.json();})
+				.then(function(json){user(json);})
+			function user(data) {
+				const person = data.results[0]
+				console.log(person);
+				var image = document.getElementById('img');
+				image.src = person.picture.large;
+				var name = document.getElementById('name');
+				name.innerHTML = person.name.first +'<br>'+ person.name.last;
+				var nNumber = document.getElementById('nNo');
+				nNumber.innerHTML = 'N00'+Math.floor((Math.random()*900000)+100000);
+				var pos = document.getElementById('position');
+				var studentOrTeacher = ['STUDENT','STUDENT','STUDENT','STUDENT','PROFESSOR']
+				pos.innerHTML = studentOrTeacher[Math.floor(Math.random()*studentOrTeacher.length)]
+				if(pos.innerHTML == 'PROFESSOR'){
+					pos.style.top = '-35px';
+					pos.style.left = '-45px';
+				}
+			}
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
