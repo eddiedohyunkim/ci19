@@ -1,6 +1,6 @@
 <html>
 <head>
-	<title>random user</title>
+	<title>New School ID generator</title>
 </head>
 <style>
 	@font-face {
@@ -15,6 +15,9 @@
  		font-family: neue-reg-wide;
   		src: url(neue_reg_wide.otf);
 	}
+	:fullscreen {
+  background-color: #000000;
+  }
 	#card{
 		width: 242px;
 		height: 383px;
@@ -98,27 +101,31 @@
 	    elem.msRequestFullscreen();
 	  }
 	}
-	var url = 'https://randomuser.me/api/?nat=AU,BR,CA,CH,DE,DK,ES,FI,FR,GB,IE,NO,NL,NZ,TR,US'
-	fetch(url)
-		.then(function(response){return response.json();})
-		.then(function(json){user(json);})
-	function user(data) {
-		const person = data.results[0]
-		console.log(person);
-		var image = document.getElementById('img');
-		image.src = person.picture.large;
-		var name = document.getElementById('name');
-		name.innerHTML = person.name.first +'<br>'+ person.name.last;
-		var nNumber = document.getElementById('nNo');
-		nNumber.innerHTML = 'N00'+Math.floor((Math.random()*900000)+100000);
-		var pos = document.getElementById('position');
-		var studentOrTeacher = ['STUDENT','STUDENT','STUDENT','STUDENT','PROFESSOR']
-		pos.innerHTML = studentOrTeacher[Math.floor(Math.random()*studentOrTeacher.length)]
-		if(pos.innerHTML == 'PROFESSOR'){
-			pos.style.top = '-35px';
-			pos.style.left = '-45px';
+	setInterval(function(){ getNewUsers() }, 2000);
+	function getNewUsers(){
+		var url = 'https://randomuser.me/api/?nat=AU,BR,CA,CH,DE,DK,ES,FI,FR,GB,IE,NO,NL,NZ,TR,US'
+		fetch(url)
+			.then(function(response){return response.json();})
+			.then(function(json){user(json);})
+		function user(data) {
+			const person = data.results[0]
+			console.log(person);
+			var image = document.getElementById('img');
+			image.src = person.picture.large;
+			var name = document.getElementById('name');
+			name.innerHTML = person.name.first +'<br>'+ person.name.last;
+			var nNumber = document.getElementById('nNo');
+			nNumber.innerHTML = 'N00'+Math.floor((Math.random()*900000)+100000);
+			var pos = document.getElementById('position');
+			var studentOrTeacher = ['STUDENT','STUDENT','STUDENT','STUDENT','PROFESSOR']
+			pos.innerHTML = studentOrTeacher[Math.floor(Math.random()*studentOrTeacher.length)]
+			if(pos.innerHTML == 'PROFESSOR'){
+				pos.style.top = '-35px';
+				pos.style.left = '-45px';
+			}
 		}
 	}
+	
 </script>
 </body>
 </html>
