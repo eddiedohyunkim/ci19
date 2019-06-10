@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<style>
+	html, body, video{
+		margin: 0;
+		padding: 0;
+		background-color: #000000;
+	}
+</style>
+<body>
+	<button onclick="openFullscreen();">Fullscreen</button>
+	<video autoplay></video>
+<script>
+/* Mobile camera 
+//selfie cam
+//var constraints = { audio: true, video: { facingMode: "user" } };
+//rear cam
+var constraints = { audio: true, video: { facingMode: "environment" } };
+*/
+var constraints = {
+  audio: false,
+  video: {
+  	facingMode: "environment"
+  }
+};
+var elem = document.documentElement;
+function openFullscreen() {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  }
+}
+navigator.mediaDevices.getUserMedia(constraints)
+.then(function(mediaStream) {
+	/* use the stream */
+	var video = document.querySelector('video');
+  video.srcObject = mediaStream;
+  video.onloadedmetadata = function(e) {
+  	video.play();
+  };
+})
+.catch(function(err) {
+  /* handle the error */
+  console.log(err.name + ": " + err.message);
+});
+</script>
+</body>
+</html>
