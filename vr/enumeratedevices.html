@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<script type="text/javascript">
+	(function (){
+		if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+  			document.body.innerHTML = 'enumerateDevices() not supported.';
+  			return;
+		}
+	}());
+	navigator.mediaDevices.enumerateDevices()
+	.then(getCameras).catch(error);
+
+	function getCameras(devices) {
+		console.log(devices);
+	}
+	function error(err) {
+ 		document.body.innerHTML += err.name + ': ' + err.message;
+	}
+</script>
+</body>
+</html>

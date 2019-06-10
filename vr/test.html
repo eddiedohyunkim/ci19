@@ -2,21 +2,30 @@
 <html>
 <head>
 	<title></title>
+	<style>
+		html, body, div, video{
+			margin: 0;
+			padding: 0;
+		} 
+		.select1, .select2{
+			display: inline-grid;
+		}
+	</style>
 </head>
 <body>
 	<div class='select1'>
-		<label for='videoSource1'>Video source: </label>
+		<label for='videoSource1'>Left: </label>
 		<select id='videoSource1'></select>
+		<video muted autoplay id='camera1'></video>
 	</div>
-	<video muted autoplay id='camera1'></video>
 	<div class='select2'>
-		<label for='videoSource2'>Video source: </label>
+		<label for='videoSource2'>Right: </label>
 		<select id='videoSource2'></select>
+		<video muted autoplay id='camera2'></video>
 	</div>
-	<video muted autoplay id='camera2'></video>
 <script>
-	var videoElement1 = document.getElementById('camera1');
-	var videoElement2 = document.getElementById('camera2');
+	var camera1 = document.getElementById('camera1');
+	var camera2 = document.getElementById('camera2');
 	var videoSrc1 = document.getElementById('videoSource1');
 	var videoSrc2 = document.getElementById('videoSource2');
 	
@@ -94,17 +103,16 @@
 	
 	function gotStream1(stream1) {
 	  window.stream = stream1; // make stream1 available to console
-	  videoElement1.srcObject = stream1;
+	  camera1.srcObject = stream1;
 	}
 	function gotStream2(stream2) {
 	  window.stream = stream2; // make stream2 available to console
-	  videoElement2.srcObject = stream2;
+	  camera2.srcObject = stream2;
 	}
 	
 	function handleError(error) {
 	  console.log('Error: ', error);
 	}
-
 
 </script>
 </body>
