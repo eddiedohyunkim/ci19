@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<div class='select1'>
+		<label for='videoSource1'>Video source: </label>
+		<select id='videoSource1'></select>
+	</div>
+	<video muted autoplay id='camera1'></video>
+	<div class='select2'>
+		<label for='videoSource2'>Video source: </label>
+		<select id='videoSource2'></select>
+	</div>
+	<video muted autoplay id='camera2'></video>
+<script>
+	var videoElement1 = document.getElementById('camera1');
+	var videoElement2 = document.getElementById('camera2');
+	var videoSrc1 = document.getElementById('videoSource1');
+	var videoSrc2 = document.getElementById('videoSource2');
+	
+	navigator.mediaDevices.enumerateDevices()
+	  .then(gotDevices1).then(getStream1).catch(handleError);
+	navigator.mediaDevices.enumerateDevices()
+	  .then(gotDevices2).then(getStream2).catch(handleError);
+	
+	videoSrc1.onchange = getStream1;
+	videoSrc2.onchange = getStream2;
+	
+	function gotDevices1(deviceInfos1) {
+	  for (var i = 0; i !== deviceInfos1.length; ++i) {
+	    var deviceInfo1 = deviceInfos1[i];
+	    var option1 = document.createElement('option');
+	    option1.value = deviceInfo1.deviceId;
+	 
+	    if (deviceInfo1.kind === 'videoinput') {
+	      option1.text = deviceInfo1.label || 'camera ' +
+	        (videoSrc1.length + 1);
+	      videoSrc1.appendChild(option1);
+	    } else {
+	      console.log('Found one other kind of source/device: ', deviceInfo1);
+	    }
+	  }
+	}
+	function gotDevices2(deviceInfos2) {
+	  for (var j = 0; j !== deviceInfos2.length; ++j) {
+	    var deviceInfo2 = deviceInfos2[j];
+	    var option2 = document.createElement('option');
+	    option2.value = deviceInfo2.deviceId;
+	 
+	    if (deviceInfo2.kind === 'videoinput') {
+	      option2.text = deviceInfo2.label || 'camera ' +
+	        (videoSrc2.length + 1);
+	      videoSrc2.appendChild(option2);
+	    } else {
+	      console.log('Found one other kind of source/device: ', deviceInfo2);
+	    }
+	  }
+	}
+	
+	function getStream1() {
+	  if (window.stream) {
+	    window.stream.getTracks().forEach(function(track1) {
+	      track1.stop();
+	    });
+	  }
+	
+	  var constraints1 = {
+	    video: {
+	      deviceId: {exact: videoSrc1.value}
+	    }
+	  };
+	
+	  navigator.mediaDevices.getUserMedia(constraints1).
+	    then(gotStream1).catch(handleError);
+	}
+	function getStream2() {
+	  if (window.stream) {
+	    window.stream.getTracks().forEach(function(track2) {
+	      track2.stop();
+	    });
+	  }
+	
+	  var constraints2 = {
+	    video: {
+	      deviceId: {exact: videoSrc2.value}
+	    }
+	  };
+	
+	  navigator.mediaDevices.getUserMedia(constraints2).
+	    then(gotStream2).catch(handleError);
+	}
+	
+	function gotStream1(stream1) {
+	  window.stream = stream1; // make stream1 available to console
+	  videoElement1.srcObject = stream1;
+	}
+	function gotStream2(stream2) {
+	  window.stream = stream2; // make stream2 available to console
+	  videoElement2.srcObject = stream2;
+	}
+	
+	function handleError(error) {
+	  console.log('Error: ', error);
+	}
+
+
+</script>
+</body>
+</html>
