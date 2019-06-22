@@ -1,0 +1,28 @@
+<title>AAA</title>
+<style>
+	@font-face{
+		font-family: franklingothic;
+		src: url(assets/franklin_gothic.ttf);
+	}
+	html{font-family: franklingothic;}
+</style>
+<body>
+	<span>A</span>
+<script>
+	let t = 200;
+	let elem = document.documentElement;
+	document.body.style.fontSize = window.innerHeight;
+	document.body.onclick = function(){openFullscreen()};
+	setInterval(function(){laugh();},t);
+	function openFullscreen(){
+		if (elem.requestFullscreen){elem.requestFullscreen();}
+	}
+	function laugh(){
+		let opt = 'A';
+		let r = Math.floor(Math.random()*opt.length);
+		let aeo = document.querySelector('span');
+		aeo.innerHTML = opt[r];
+		setTimeout(function(){aeo.innerHTML='';},t/2);
+	}
+</script>
+</body>
