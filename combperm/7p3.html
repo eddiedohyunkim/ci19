@@ -1,0 +1,178 @@
+<title>7p3</title>
+<style>
+	body {
+		margin: 0;
+		overflow: hidden;
+	}
+	#lefttop{
+		position: absolute;
+		color: #ffffff;
+		top:0px;
+		padding:5px;
+	}
+	.labelstyle{
+		cursor: pointer;
+		font-size: 18px;
+		color: #ffffff;
+		border-radius: 50%;
+		background-color: rgba(255,0,255,0.7);
+	}	
+	button{
+		position:absolute;
+		top: 10px;
+	}
+</style>
+<body>
+	<script src="js/three.js"></script>
+	<script src="js/OrbitControls.js"></script>
+	<script src="js/CSS2DRenderer.js"></script>
+	<script src="js/tween.min.js"></script>
+	<div id="container"></div>
+	<div id="lefttop"></div>
+<script>
+	var camera, scene, renderer;
+	var controls;
+	var positions,linePositions,colors;
+	init();
+	animate();
+	test();
+	function init() {
+		var max = 7;
+		var pick = 3;
+		var prob = factorial(max)/factorial(max-pick);
+		function factorial(n) {
+			return (n != 1) ? n * factorial(n - 1) : 1;
+		}
+		document.getElementById('lefttop').innerHTML=max+' choose '+pick+' is '+prob.toLocaleString()+' permutations total. (order matters!)';
+
+		camera = new THREE.OrthographicCamera(window.innerWidth / - 130, window.innerWidth / 130, window.innerHeight / 130, window.innerHeight / - 130, 1, 100);
+		camera.position.x = max;
+		camera.position.y = max;
+		camera.position.z = max;
+		scene = new THREE.Scene();
+		scene.position.x = -1/2*max;
+		scene.position.y = -1/2*max;
+		scene.position.z = -1/2*max;
+
+		var geometry = new THREE.BufferGeometry();
+		var material = new THREE.LineBasicMaterial({vertexColors: THREE.VertexColors});
+		var perm;
+		linePositions = [];
+		positions = [];
+		colors = [];
+		
+		for(var a=1; a<=max; a+=1){
+			for(var b=a+1; b<=max; b+=1){
+				for(var c=b+1; c<=max; c+=1){
+					perm = [[a,b,c],[a,c,b],[b,a,c],[b,c,a],[c,a,b],[c,b,a]];
+					for(var i=0; i<perm.length; i+=1){
+						var x = perm[i][0];
+						var y = perm[i][1];
+						var z = perm[i][2];
+						positions.push([x, y, z]);
+						linePositions.push(x,y,z);
+						// colors
+						colors.push(1);
+						colors.push(1);
+						colors.push(1);
+						//tags
+						var point = document.createElement("div");
+						point.className = "labelstyle";
+						point.setAttribute('id','n'+x+''+y+''+z);
+						point.textContent = x+','+y+','+z;
+						var labels = new THREE.CSS2DObject(point);
+						labels.position.set(x, y, z);
+						scene.add(labels);
+					}	
+				}
+			}
+		}
+		geometry.addAttribute('position', new THREE.Float32BufferAttribute(linePositions,3));
+		geometry.addAttribute('color', new THREE.Float32BufferAttribute(colors,3));
+		geometry.computeBoundingSphere();
+		line = new THREE.Line(geometry, material);
+		// line.position.y = max/2
+		scene.add(line);
+
+		renderer = new THREE.WebGLRenderer();
+		renderer.setPixelRatio(window.devicePixelRatio);
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		container.appendChild(renderer.domElement);
+
+		labelRenderer = new THREE.CSS2DRenderer();
+		labelRenderer.setSize(window.innerWidth, window.innerHeight);
+		labelRenderer.domElement.style.position = 'absolute';
+		labelRenderer.domElement.style.top = 0;
+		container.appendChild(labelRenderer.domElement);
+
+		// Trackball Ctrls
+		controls = new THREE.OrbitControls(camera);
+		controls.rotateSpeed = 0.7;
+		controls.zoomSpeed = 0.3;
+		controls.addEventListener('change', render);
+		window.addEventListener('resize', onWindowResize, false);	
+	}
+
+	function test(){
+		console.log(positions);
+		for(var i=0; i<positions.length/2;i+=1){
+			(function(index){
+				var xyz = document.getElementById('n'+positions[index][0]+''+positions[index][1]+''+positions[index][2]);
+				// xyz.style.backgroundColor = '#00ff00';
+					// xyz.style.color = '#000000';
+				xyz.onclick =function(){
+					xyz.style.backgroundColor = '#00ff00';
+					xyz.style.color = '#000000';
+					transform([-1*positions[index][2],-1*positions[index][1],-1*positions[index][0]],2000);
+				}
+			})(i);
+		}
+		for(var j=positions.length-6; j<positions.length;j+=1){
+			(function(index){
+				var xyz6 = document.getElementById('n'+positions[index][0]+''+positions[index][1]+''+positions[index][2]);
+				xyz6.onclick = function(){
+					xyz6.style.backgroundColor = '#00ff00'
+					xyz6.style.color = '#000000';
+					transform([positions[index][2],positions[index][1],positions[index][0]],2000);
+				}
+			})(j);
+		}
+
+	}
+
+	function transform(targets, duration) {
+		TWEEN.removeAll();
+			new TWEEN.Tween(camera.position)
+				.to({x:targets[0] , y: targets[1], z: targets[2]}, 2000)
+				.easing(TWEEN.Easing.Quadratic.InOut)
+				.start();
+		
+		new TWEEN.Tween(this)
+			.to({}, duration*2)
+			.onUpdate(render)
+			.start();
+	}
+
+	function onWindowResize() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		labelRenderer.setSize(window.innerWidth, window.innerHeight);
+		// controls.handleResize();
+		render();
+	}
+
+	function animate() {
+		requestAnimationFrame(animate);
+		TWEEN.update();
+		controls.update();
+		render();
+	}
+
+	function render() {
+		renderer.render(scene, camera);
+		labelRenderer.render(scene, camera);
+	}
+
+</script>
+</body>

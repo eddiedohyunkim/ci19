@@ -1,0 +1,31 @@
+<html>
+	<title></title>
+<body>
+<script type="text/javascript">
+	var max = 20;
+	var pick = 6;
+	var prob = factorial(max)/(factorial(pick)*factorial(max-pick));
+	document.body.innerHTML = 'How many combinations for '+max+' choose '+pick+' : '+prob.toLocaleString()+'<br>';
+
+	for(var a=1; a<=max; a+=1){
+		for(var b=a+1; b<=max; b+=1){
+			for(var c=b+1; c<=max; c+=1){
+				for(var d=c+1; d<=max; d+=1){
+					for(var e=d+1; e<=max; e+=1){
+						// this 6th forloop is almost impossible to compute
+						for(var f=e+1; f<=max; f+=1){
+							var options = document.createElement('span');
+							options.innerHTML = (a+','+b+','+c+','+d+','+e+','+f+' / ');
+							document.body.appendChild(options);
+						}
+					}
+				}
+			}
+		}
+	}
+	function factorial(n) {
+		return (n != 1) ? n * factorial(n - 1) : 1;
+	}
+</script>
+</body>
+</html>

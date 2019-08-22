@@ -1,0 +1,123 @@
+<title></title>
+<style>
+	body {
+		margin: 0;
+		overflow: hidden;
+	}
+	#lefttop{
+		position: absolute;
+		color: #ffffff;
+		top:0px;
+		padding:5px;
+	}
+	.labelstyle{
+		font-size: 15px;
+		color: #ffffff;
+		border-radius: 50%;
+		/*text-align: center;*/
+		background-color: rgba(255,0,255,0.7);
+	}	
+</style>
+<body>
+	<script src="js/three.js"></script>
+	<script src="js/OrbitControls.js"></script>
+	<!-- <script src="js/CSS3DRenderer.js"></script> -->
+	<script src="js/CSS2DRenderer.js"></script>
+	<div id="container"></div>
+	<div id="lefttop"></div>
+<script>
+	var camera, scene, renderer;
+	var controls;
+	init();
+	animate();
+	function init() {
+		var max = 7;
+		var pick = 3;
+		var prob = factorial(max)/(factorial(pick)*factorial(max-pick));
+		document.getElementById('lefttop').innerHTML = max+' choose '+pick+' : '+prob.toLocaleString()+' combinations total. (order does not matters)';
+		function factorial(n) {
+			return (n != 1) ? n * factorial(n - 1) : 1;
+		}
+
+		camera = new THREE.OrthographicCamera( window.innerWidth / - 200, window.innerWidth / 200, window.innerHeight / 200, window.innerHeight / - 200, 1, 100 );
+		camera.position.x = max;
+		camera.position.y = max;
+		camera.position.z = max;
+		scene = new THREE.Scene();
+		scene.position.y = max/2*-1;
+		var geometry = new THREE.BufferGeometry();
+		var material = new THREE.LineBasicMaterial( { vertexColors: THREE.VertexColors } );
+		var positions = [];
+		var colors = [];
+
+		for(var a=1; a<=max; a+=1){
+			for(var b=a+1; b<=max; b+=1){
+				for(var c=b+1; c<=max; c+=1){
+					var x = b;
+					var y = c;
+					var z = a;
+					positions.push( x, y, z );
+					// colors
+					colors.push(1);
+					colors.push(1);
+					colors.push(1);
+
+					//tags
+					var point = document.createElement("div");
+					point.className = "labelstyle";
+					point.textContent = a+','+b+','+c;
+					var labels = new THREE.CSS2DObject(point);
+					labels.position.set(x, y, z);
+					scene.add(labels);
+				}
+			}
+		}
+
+		geometry.addAttribute( 'position', new THREE.Float32BufferAttribute( positions, 3 ) );
+		geometry.addAttribute( 'color', new THREE.Float32BufferAttribute( colors, 3 ) );
+		geometry.computeBoundingSphere();
+		line = new THREE.Line( geometry, material );
+		scene.add( line );
+
+		renderer = new THREE.WebGLRenderer();
+		renderer.setPixelRatio( window.devicePixelRatio );
+		renderer.setSize( window.innerWidth, window.innerHeight );
+		container.appendChild( renderer.domElement );
+
+		labelRenderer = new THREE.CSS2DRenderer();
+		labelRenderer.setSize(window.innerWidth, window.innerHeight);
+		labelRenderer.domElement.style.position = 'absolute';
+		labelRenderer.domElement.style.top = 0;
+		container.appendChild(labelRenderer.domElement);
+
+		// Trackball Ctrls
+		controls = new THREE.OrbitControls(camera);
+		controls.rotateSpeed = 0.3;
+		controls.zoomSpeed = 0.3;
+		controls.addEventListener('change', render);
+		window.addEventListener('resize', onWindowResize, false);
+
+	}
+	
+	function onWindowResize() {
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
+		renderer.setSize(window.innerWidth, window.innerHeight);
+		labelRenderer.setSize(window.innerWidth, window.innerHeight);
+		controls.handleResize();
+		render();
+	}
+
+	function animate() {
+		requestAnimationFrame( animate );
+		controls.update();
+		render();
+	}
+
+	function render() {
+		renderer.render(scene, camera);
+		labelRenderer.render(scene, camera);
+	}
+
+</script>
+</body>
